@@ -1,0 +1,63 @@
+{% load to_jalali_datetime %}
+<style>
+@font-face {
+    font-family: 'Vazirmatn';
+    src: url('/static/fonts/Vazirmatn-Regular.ttf') format('truetype');
+}
+
+body {
+    font-family: 'Vazirmatn', sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+
+table {
+    border-spacing: 0 2px;
+    width: 90%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 5px;
+    border: solid 1px black;
+    text-align: right;
+    font-family: 'Vazirmatn', sans-serif;
+}
+
+th {
+    background-color: #f2f2f2;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+td {
+    font-size: 14px;
+}
+</style>
+
+<div id="mainContent">
+    <table>
+        <tr>
+            <th>نام کالا</th>
+            <th>برند</th>
+            <th>تعداد</th>
+            <th>نوع</th>
+            <th>توضیحات</th>
+            <th>تاریخ</th>
+            <th>وضعیت</th>
+        </tr>
+    {% for log in logs %}
+        <tr>
+            <td>{{ log.name }}</td>
+            <td>{{ log.brand }}</td>
+            <td>{{ log.count }}</td>
+            <td>{{ log.order_type }}</td>
+            <td>{% if log.description %}{{ log.description }}{% else %}بدون توضیحات{% endif %}</td>
+            <td>{{ log.created|to_jalali:'%Y/%m/%d - %H:%M' }}</td>
+            <td>{% if log.completed == False %}درحال بررسی{% else %}انجام شده{% endif %}</td>
+        </tr>
+    {% empty %}
+    </table>
+        <span class="message">اطلاعاتی موجود نیست.</span>
+    {% endfor %}
+</div>

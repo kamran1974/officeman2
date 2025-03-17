@@ -1,0 +1,22 @@
+{% load to_jalali_datetime %}
+{% for log in logs %}
+<tr style="background-color: {% if log.status == 'رد شده' or log.status == 'رد جانشین' %}#ff000036{% elif log.status == 'موافقت شده' %}#32c91736{% else %}white{% endif %};">
+    <td>{{ log.user }}</td>
+    <td>{{ log.alternative }}</td>
+    <td>{{ log.type }}</td>
+    <td>{{ log.start_date|to_jalali:'%Y/%m/%d - %H:%M' }}</td>
+    <td>{{ log.end_date|to_jalali:'%Y/%m/%d - %H:%M' }}</td>
+    <td>{{ log.duration }}</td>
+    <td>{% if log.description %}{{ log.description }}{% else %}بدون توضیحات{% endif %}</td>
+    <td>{{ log.created|to_jalali:'%Y/%m/%d - %H:%M' }}</td>
+    <td>{{ log.status }}</td>
+    <td>
+        <a class="a-btn" href="{% if action_mode == 'boss' %}{% url 'organization:vacation_request_review' log.id %}{% else %}{% url 'organization:alternative_request_review' log.id %}{% endif %}">
+            <i class="order-completed fi fi-rr-assessment-alt"></i>
+        </a>
+    </td>
+</tr>
+{% empty %}
+</table>
+<span class="message">اطلاعاتی موجود نیست.</span>
+{% endfor %}

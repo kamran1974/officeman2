@@ -1,0 +1,101 @@
+table {
+    direction: rtl;
+    border-spacing: 0 2px;
+    width: 90%;
+}
+form {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    gap: 25px;
+    font-family: 'Vazirmatn';
+}
+
+th, td {
+    padding: 5px;
+    border: solid 1px black;
+    font-family: "Vazirmatn", serif;
+    border-collapse: collapse;
+}
+th {
+    background: linear-gradient(to bottom right, rgb(223, 223, 223), rgb(255, 255, 255));
+    font-size: 16px;
+    font-weight: 500;
+    padding: 7px 5px;
+}
+td {
+    font-size: 14px;
+    font-weight: 300;
+}
+.a-btn {
+    text-decoration: none;
+    color: black;
+}
+.action-btn {
+    display: block;
+    font-size: 18px;
+    line-height: 0;
+    color: red;
+    cursor: pointer;
+}
+.tooltip {
+    visibility: hidden;
+    width: auto;
+    background-color: gray;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-size: 13px;
+    font-weight: 200;
+
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 72%;
+    margin-left: -60px;
+}
+.fi-rr-caret-up {
+    font-size: 16px;
+    color: gray;
+    position: absolute;
+    top: -10px;
+    right: 40%;
+}
+.dItem:hover .tooltip {
+    visibility: visible;
+}
+.order-completed {
+    display: block;
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    margin: auto;
+    cursor: pointer;
+    transition: .3s;
+}
+.order-completed:hover {
+    scale: 1.2;
+}
+.message {
+    position: relative;
+    display: block;
+    direction: rtl;
+    font-size: 14px;
+    font-family: "Vazirmatn", serif;
+    padding: 10px 20px;
+    margin: 20px 0;
+    background-color: whitesmoke;
+    border-radius: 5px;
+    color: black;
+}
+@media only screen and (max-width: 768px) {
+    .dHeader {
+        font-size: 12px;
+        width: auto;
+    }
+    .dItem {
+        font-size: 12px;
+        width: auto;
+    }
+}

@@ -1,0 +1,16 @@
+{% load to_jalali_datetime %}
+{% for log in logs %}
+<tr>
+    <td>{{ log.user }}</td>
+    <td>{{ log.type }}</td>
+    <td>{% if log.description %}{{ log.description }}{% else %}بدون توضیحات{% endif %}</td>
+    <td>{% if log.corrective_actions %}{{ log.corrective_actions }}{% else %}بدون توضیحات{% endif %}</td>
+    <td>{% if log.prevention_actions %}{{ log.prevention_actions }}{% else %}بدون توضیحات{% endif %}</td>
+    <td>{{ log.created|to_jalali:'%Y/%m/%d - %H:%M' }}</td>
+    <td>{% if log.effective == False %}خیر{% else %}بله{% endif %}</td>
+    <td><i class="order-completed fi fi-rr-assessment-alt"></i></td>
+</tr>
+{% empty %}
+</table>
+<span class="message">اطلاعاتی موجود نیست.</span>
+{% endfor %}

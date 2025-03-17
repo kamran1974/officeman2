@@ -1,0 +1,30 @@
+.log-detail-box {
+    display: flex;
+    direction: rtl;
+    padding: 0 50px;
+    flex-direction: column;
+}
+.log-label {
+    font-family: 'Vazirmatn';
+    font-size: 14px;
+    font-weight: 500;
+}
+.log-text {
+    font-family: 'Vazirmatn', serif;
+    font-weight: 300;
+    font-size: 14px;
+    padding: 7px 15px;
+    background-color: #ececec;
+    width: -webkit-fill-available;
+    text-align: right;
+    border-radius: 5px;
+}
+.order-note {
+    display: block;
+    width: max-content;
+    padding: 2px 10px;
+    background-color: rgb(119 93 167);
+    color: white;
+    border-radius: 10px;
+    margin-bottom: 5px;
+}

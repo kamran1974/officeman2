@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+{% block include %}
+<link href="{% static "css/forms.css" %}" rel="stylesheet">
+{% endblock %}
+{% block content %}
+<form class="formBox" method="post">
+    {% if message %}
+    <span class="message" style="color: {{ status }};">{{ message }}</span>
+    {% endif %}
+    {{ form.as_p }}
+    {% csrf_token %}
+    <input id="apply" type="submit" value="ثبت">
+</form>
+{% endblock %}
+
+{% block domready %}
+<script>
+
+</script>
+{% endblock %}
