@@ -119,7 +119,7 @@ class LogAdmin(admin.ModelAdmin):
         return datetime2jalali(obj.created).strftime('%Y-%m-%d - %H:%M')
 
     @admin.display(description='هدف', ordering='created')
-    def log_content(self, obj):
+    #def log_content(self, obj):
 
     #    return mark_safe(f'<a href="{reverse('admin:%s_%s_change' % (obj.content_object._meta.app_label,  obj.content_object._meta.model_name), args=[obj.object_id])}">{obj.content_object}</a>')
 
