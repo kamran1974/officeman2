@@ -121,7 +121,7 @@ class LogAdmin(admin.ModelAdmin):
     @admin.display(description='هدف', ordering='created')
     def log_content(self, obj):
 
-        return mark_safe(f'<a href="{reverse('admin:%s_%s_change' % (obj.content_object._meta.app_label,  obj.content_object._meta.model_name), args=[obj.object_id])}">{obj.content_object}</a>')
+    #    return mark_safe(f'<a href="{reverse('admin:%s_%s_change' % (obj.content_object._meta.app_label,  obj.content_object._meta.model_name), args=[obj.object_id])}">{obj.content_object}</a>')
 
     def has_add_permission(self, request):
         return False
