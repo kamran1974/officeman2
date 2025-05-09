@@ -88,7 +88,7 @@ def vacation_request_review(request, pk):
         if request.user.has_perm('organization.change_vacationrequest'):
             form = VacationRequestBossReviewForm(data=request.POST, instance=instance)
             if form.has_changed():
-                message = f'وضعیت درخواست را از "{instance.status}" به "{form.data['status']}" تغییر داد.'
+                message = f'وضعیت درخواست را از {instance.status} به {form.data['status']} تغییر داد.'
                 Log.objects.create(user=request.user,
                                    action=message,
                                    content_object=instance)
@@ -151,7 +151,7 @@ def alter_request_review(request, pk):
         if request.method == 'POST':
             form = VacationRequestAlterReviewForm(data=request.POST, instance=instance)
             if form.has_changed():
-                message = f'وضعیت درخواست را از "{instance.status}" به "{form.data['status']}" تغییر داد.'
+                message = f'وضعیت درخواست را از {instance.status} به {form.data['status']} تغییر داد.'
                 Log.objects.create(user=request.user,
                                    action=message,
                                    content_object=instance)
@@ -752,12 +752,12 @@ def task_review(request, pk):
             note_form = NoteForm(data=request.POST)
             if form.has_changed():
                 if instance.is_done != bool(form.data.get('is_done')):
-                    message = f'وضعیت انجام تسک را از "{"انجام نشده" if instance.is_done == False else "انجام شده"}" به "{"انجام شده" if form.data.get('is_done') else "انجام نشده"}" تغییر داد.'
+                    message = f'وضعیت انجام تسک را از {"انجام نشده" if instance.is_done == False else "انجام شده"} به {"انجام شده" if form.data.get('is_done') else "انجام نشده"} تغییر داد.'
                     Log.objects.create(user=request.user,
                                        action=message,
                                        content_object=instance.task)
                 if instance.status != form.data['status']:
-                    message2 = f'وضعیت تسک را از "{instance.status}" به "{form.data['status']}" تغییر داد.'
+                    message2 = f'وضعیت تسک را از {instance.status} به {form.data['status']} تغییر داد.'
                     Log.objects.create(user=request.user,
                                        action=message2,
                                        content_object=instance.task)
