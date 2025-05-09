@@ -44,12 +44,12 @@ def buy_order_review(request, pk):
             note_form = NoteForm(data=request.POST)
             if form.has_changed():
                 if instance.completed != bool(form.data.get('completed')):
-                    message = f'وضعیت درخواست را از "{"انجام نشده" if instance.completed == False else "انجام شده"}" به "{"انجام شده" if form.data.get('completed') else "انجام نشده"}" تغییر داد.'
+                    message = f'وضعیت درخواست را از {"انجام نشده" if instance.completed == False else "انجام شده"} به {"انجام شده" if form.data.get('completed') else "انجام نشده"} تغییر داد.'
                     Log.objects.create(user=request.user,
                                        action=message,
                                        content_object=instance)
                 if instance.status != form.data['status']:
-                    message2 = f'وضعیت درخواست را از "{instance.status}" به "{form.data['status']}" تغییر داد.'
+                    message2 = f'وضعیت درخواست را از {instance.status} به {form.data['status']} تغییر داد.'
                     Log.objects.create(user=request.user,
                                        action=message2,
                                        content_object=instance)
@@ -114,12 +114,12 @@ def stockroom_order_review(request, pk):
             note_form = NoteForm(data=request.POST)
             if form.has_changed():
                 if instance.completed != bool(form.data.get('completed')):
-                    message = f'وضعیت درخواست را از "{"انجام نشده" if instance.completed == False else "انجام شده"}" به "{"انجام شده" if form.data.get('completed') else "انجام نشده"}" تغییر داد.'
+                    message = f'وضعیت درخواست را از {"انجام نشده" if instance.completed == False else "انجام شده"} به {"انجام شده" if form.data.get('completed') else "انجام نشده"} تغییر داد.'
                     Log.objects.create(user=request.user,
                                        action=message,
                                        content_object=instance)
                 if instance.status != form.data['status']:
-                    message2 = f'وضعیت درخواست را از "{instance.status}" به "{form.data['status']}" تغییر داد.'
+                    message2 = f'وضعیت درخواست را از {instance.status} به {form.data['status']} تغییر داد.'
                     Log.objects.create(user=request.user,
                                        action=message2,
                                        content_object=instance)
