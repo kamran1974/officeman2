@@ -751,8 +751,9 @@ def task_review(request, pk):
             form = TaskReviewForm(data=request.POST, instance=instance)
             note_form = NoteForm(data=request.POST)
             if form.has_changed():
-                if instance.is_done != bool(form.data.get('is_done')):
-                    message = f'وضعیت انجام تسک را از {"انجام نشده" if instance.is_done == False else "انجام شده"} به {"انجام شده" if form.data.get('is_done') else "انجام نشده"} تغییر داد.'
+                is_done = form.data.get('is_done')
+                if instance.is_done != bool(is_done):
+                    message = f'وضعیت انجام تسک را از {"انجام نشده" if instance.is_done == False else "انجام شده"} به {"انجام شده" if is_done else "انجام نشده"} تغییر داد.'
                     Log.objects.create(user=request.user,
                                        action=message,
                                        content_object=instance.task)
