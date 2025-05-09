@@ -23,11 +23,7 @@ class NoteInline(GenericTabularInline):
 class ProductBuyOrderAdmin(admin.ModelAdmin):
     readonly_fields = ['created_jalali']
     list_display = (
-<<<<<<< HEAD
-        "name", "brand", "count", "order_type", "user", "created_jalali", "completed")
-=======
         "id", "name", "brand", "count", "order_type", "user", "created_jalali", "completed")
->>>>>>> 3d29c33 (New feature TODOLIST added)
     list_filter = (
         "user", "order_type", "completed")
     fieldsets = (
@@ -35,11 +31,7 @@ class ProductBuyOrderAdmin(admin.ModelAdmin):
         ("اطلاعات کالا", {"fields": (
             "name", "brand", "count", "order_type", "description")}),
         ("وضعیت درخواست", {"fields": (
-<<<<<<< HEAD
-            "completed",)}),
-=======
             "status", "completed")}),
->>>>>>> 3d29c33 (New feature TODOLIST added)
         ("تاریخ و زمان", {"fields": (
             "created_jalali",), })
     )
@@ -64,11 +56,7 @@ class ProductBuyOrderAdmin(admin.ModelAdmin):
 class ProductStockroomOrderAdmin(admin.ModelAdmin):
     readonly_fields = ['created_jalali']
     list_display = (
-<<<<<<< HEAD
-        "name", "brand", "count", "order_type", "user", "created_jalali", "completed")
-=======
         "id", "name", "brand", "count", "order_type", "user", "created_jalali", "completed")
->>>>>>> 3d29c33 (New feature TODOLIST added)
     list_filter = (
         "user", "order_type", "completed")
     fieldsets = (
@@ -76,11 +64,7 @@ class ProductStockroomOrderAdmin(admin.ModelAdmin):
         ("اطلاعات کالا", {"fields": (
             "name", "brand", "count", "order_type", "description")}),
         ("وضعیت درخواست", {"fields": (
-<<<<<<< HEAD
-            "completed",)}),
-=======
             "status", "completed")}),
->>>>>>> 3d29c33 (New feature TODOLIST added)
         ("تاریخ و زمان", {"fields": (
             "created_jalali",), })
     )

@@ -5,16 +5,10 @@ from jalali_date_new.fields import JalaliDateTimeField, JalaliDateField
 from jalali_date_new.widgets import AdminJalaliDateTimeWidget, AdminJalaliTimeWidget,\
 									AdminJalaliDateWidget
 from jalali_date_new.utils import datetime2jalali
-<<<<<<< HEAD
-from .models import VacationRequest, ProblemReport, Log
-from django.utils.safestring import mark_safe
-from django.urls import reverse
-=======
 from .models import VacationRequest, ProblemReport, Log, TodoList, TaskAssignment
 from django.utils.safestring import mark_safe
 from django.urls import reverse
 from shop.models import Note
->>>>>>> 3d29c33 (New feature TODOLIST added)
 
 
 class LogInline(GenericTabularInline):
@@ -37,8 +31,6 @@ class LogInline(GenericTabularInline):
         return False
 
 
-<<<<<<< HEAD
-=======
 class NoteInline(GenericTabularInline):
     model = Note
     verbose_name="یادداشت"
@@ -61,16 +53,11 @@ class NoteInline(GenericTabularInline):
         return False
 
 
->>>>>>> 3d29c33 (New feature TODOLIST added)
 @admin.register(VacationRequest)
 class VacationRequestAdmin(admin.ModelAdmin):
     readonly_fields = ['created_jalali']
     list_display = (
-<<<<<<< HEAD
-        "user", "alternative", "start_jalali", "type", "duration", "status")
-=======
         "id", "user", "alternative", "start_jalali", "type", "duration", "status")
->>>>>>> 3d29c33 (New feature TODOLIST added)
     list_filter = (
         "user", "alternative", "status")
     fieldsets = (
@@ -111,11 +98,7 @@ class VacationRequestAdmin(admin.ModelAdmin):
 class ProblemReportAdmin(admin.ModelAdmin):
     readonly_fields = ['created_jalali']
     list_display = (
-<<<<<<< HEAD
-        "type", "user", "description", "created_jalali", "effective")
-=======
         "id", "type", "user", "description", "created_jalali", "effective")
->>>>>>> 3d29c33 (New feature TODOLIST added)
     list_filter = (
         "user", "type", "effective")
     fieldsets = (
@@ -144,11 +127,7 @@ class ProblemReportAdmin(admin.ModelAdmin):
 @admin.register(Log)
 class LogAdmin(admin.ModelAdmin):
     readonly_fields = ['user', 'action', 'created',]
-<<<<<<< HEAD
-    list_display = ['user', 'action', 'created_jalali', 'log_content']
-=======
     list_display = ['user', 'log_content', 'action', 'created_jalali']
->>>>>>> 3d29c33 (New feature TODOLIST added)
     fieldsets = (
         ("عامل", {"fields": (
             "user",)}),
@@ -163,29 +142,17 @@ class LogAdmin(admin.ModelAdmin):
         return datetime2jalali(obj.created).strftime('%Y-%m-%d - %H:%M')
 
     @admin.display(description='هدف', ordering='created')
-<<<<<<< HEAD
-    #def log_content(self, obj):
-
-    #    return mark_safe(f'<a href="{reverse('admin:%s_%s_change' % (obj.content_object._meta.app_label,  obj.content_object._meta.model_name), args=[obj.object_id])}">{obj.content_object}</a>')
-=======
     def log_content(self, obj):
         if obj.content_object:
             html = f'<a href="{reverse("admin:%s_%s_change" % (obj.content_object._meta.app_label,  obj.content_object._meta.model_name), args=[obj.object_id])}">{obj.content_object}</a>'
             return mark_safe(html)
         else:
             return "درخواست حذف شده"
->>>>>>> 3d29c33 (New feature TODOLIST added)
 
     def has_add_permission(self, request):
         return False
 
     def has_delete_permission(self, request, obj=None):
-<<<<<<< HEAD
-        return False
-
-    def has_change_permission(self, request, obj=None):
-        return False
-=======
         return True
 
     def has_change_permission(self, request, obj=None):
@@ -247,4 +214,3 @@ class TaskAdmin(admin.ModelAdmin):
     @admin.display(description='زمان یادآوری', ordering='remind_at')
     def remind_at_jalali(self, obj):
         return datetime2jalali(obj.remind_at).strftime('%Y-%m-%d - %H:%M')
->>>>>>> 3d29c33 (New feature TODOLIST added)

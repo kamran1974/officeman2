@@ -1,9 +1,6 @@
 from django import forms
 from .models import ProductBuyOrder, ProductStockroomOrder, Note
-<<<<<<< HEAD
-=======
 from account.models import User
->>>>>>> 3d29c33 (New feature TODOLIST added)
 from jalali_date_new.fields import JalaliDateField, JalaliDateTimeField
 from jalali_date_new.widgets import AdminJalaliDateWidget, AdminJalaliTimeWidget,\
 									AdminJalaliDateTimeWidget
@@ -144,25 +141,6 @@ class NoteForm(forms.ModelForm):
             })
         }
 
-<<<<<<< HEAD
-
-class SearchForm(forms.Form):
-
-    start_date = JalaliDateTimeField(label="تاریخ شروع",
-                                     widget=AdminJalaliDateWidget)
-    start_date.widget.attrs.update({'class': 'formTextBox'})
-    start_date.widget.attrs.update({'placeholder': 'تاریخ شروع'})
-
-    end_date = JalaliDateTimeField(label="تاریخ پایان",
-                                   widget=AdminJalaliDateWidget)
-    end_date.widget.attrs.update({'class': 'formTextBox'})
-    end_date.widget.attrs.update({'placeholder': 'تاریخ پایان'})
-
-    status = forms.CharField(widget=forms.Select(attrs={
-        'class': "formTextBox",
-        'id': "status",
-    }, choices=REQUEST_STATUS), label="وضعیت")
-=======
 # آپدیت فرم جست و جو با پارامتر متقاضی
 class SearchForm(forms.Form):
     start_date = JalaliDateTimeField(
@@ -203,4 +181,3 @@ class SearchForm(forms.Form):
             'class': 'formTextBox',
             'placeholder': 'تاریخ پایان'
         })
->>>>>>> 3d29c33 (New feature TODOLIST added)

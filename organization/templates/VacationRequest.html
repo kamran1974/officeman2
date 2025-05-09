@@ -2,18 +2,6 @@
 {% load static %}
 {% block include %}
 <link href="{% static "css/forms.css" %}" rel="stylesheet">
-<<<<<<< HEAD
-{% endblock %}
-{% block content %}
-<form class="formBox" method="post">
-    {% if message %}
-    <span class="message" style="color: {{ status }};">{{ message }}</span>
-    {% endif %}
-    {{ form.as_p }}
-    {% csrf_token %}
-    <input id="apply" type="submit" value="ثبت">
-</form>
-=======
 <style>
     /* استایل‌های اختصاصی فرم درخواست مرخصی */
     .request-form-container {
@@ -277,29 +265,19 @@
         </div>
     </div>
 </div>
->>>>>>> 3d29c33 (New feature TODOLIST added)
 {{ form.media }}
 {% endblock %}
 
 {% block domready %}
 <script>
     jalaliDatepicker.updateOptions({"minDate": "today"});
-<<<<<<< HEAD
-    $(" #type ").change(function() {
-        if( $(this).val() == "روزانه") {
-=======
     $("#type").change(function() {
         if($(this).val() == "روزانه") {
->>>>>>> 3d29c33 (New feature TODOLIST added)
             jalaliDatepicker.updateOptions({"time": false});
         } else {
             jalaliDatepicker.updateOptions({"time": true});
         }
     });
-<<<<<<< HEAD
-</script>
-{% endblock %}
-=======
     
     // اضافه کردن کلاس‌های استایل به فیلدهای فرم
     $(document).ready(function() {
@@ -308,4 +286,3 @@
 </script>
 <script src="{% static "js/search-form.js" %}"></script>
 {% endblock %}
->>>>>>> 3d29c33 (New feature TODOLIST added)

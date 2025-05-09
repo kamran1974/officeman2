@@ -1,35 +1,3 @@
-<<<<<<< HEAD
-{% extends "base.html" %}
-{% load static %}
-{% block include %}
-<link href="{% static "css/forms.css" %}" rel="stylesheet">
-<link href="{% static "css/log-detail.css" %}" rel="stylesheet">
-{% endblock %}
-{% block content %}
-<div class="log-detail-box">
-    <p><span class="log-label">نام متقاضی:</span><span class="log-text">{{ instance.user }}</span></p>
-    <p><span class="log-label">نام جایگزین:</span><span class="log-text">{{ instance.alternative }}</span></p>
-    <p><span class="log-label">تاریخ شروع:</span><span class="log-text">{{ instance.start_date }}</span></p>
-    <p><span class="log-label">تاریخ پایان:</span><span class="log-text">{{ instance.end_date }}</span></p>
-    <p><span class="log-label">نوع مرخصی:</span><span class="log-text">{{ instance.type }}</span></p>
-    <p><span class="log-label">مدت:</span><span class="log-text">{{ instance.duration }}</span></p>
-    <p><span class="log-label">توضیحات:</span><span class="log-text">{% if instance.description %}{{ instance.description }}{% else %}بدون توضیحات{% endif %}</span></p>
-</div>
-<form class="formBox" method="post">
-    {% if message %}
-    <span class="message" style="color: {{ status }};">{{ message }}</span>
-    {% endif %}
-    {{ form.as_p }}
-    {% csrf_token %}
-    <input id="apply" type="submit" value="اعمال تغییرات">
-</form>
-{% endblock %}
-
-{% block domready %}
-<script>
-
-</script>
-=======
 {% extends "base.html" %}
 {% load static %}
 {% load to_jalali_datetime %}
@@ -550,5 +518,4 @@
         }
     });
 </script>
->>>>>>> 3d29c33 (New feature TODOLIST added)
 {% endblock %}

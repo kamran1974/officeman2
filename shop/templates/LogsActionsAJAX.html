@@ -1,20 +1,3 @@
-<<<<<<< HEAD
-{% load to_jalali_datetime %}
-{% for log in logs %}
-<tr style="background-color: {% if log.status == 'رد شده' or log.status == 'بررسی بیشتر' %}#ff000036{% elif log.status == 'موافقت شده' %}#32c91736{% else %}white{% endif %};">
-    <td>{{ log.name }}</td>
-    <td>{{ log.brand }}</td>
-    <td>{{ log.count }}</td>
-    <td>{{ log.order_type }}</td>
-    <td>{% if log.description %}{{ log.description }}{% else %}بدون توضیحات{% endif %}</td>
-    <td>{{ log.created|to_jalali:'%Y/%m/%d - %H:%M' }}</td>
-    <td>{% if log.completed == False %}{{ log.status }}{% else %}انجام شده{% endif %}</td>
-    <td><a class="a-btn" href="{{ log.get_absolute_url }}"><i class="order-completed fi fi-rr-assessment-alt"></i></a></td>
-</tr>
-{% empty %}
-</table>
-<span class="message">اطلاعاتی موجود نیست.</span>
-=======
 {% load to_jalali_datetime %}
 {% for log in logs %}
 <tr>
@@ -53,5 +36,4 @@
         <div class="empty-message">اطلاعاتی موجود نیست.</div>
     </td>
 </tr>
->>>>>>> 3d29c33 (New feature TODOLIST added)
 {% endfor %}

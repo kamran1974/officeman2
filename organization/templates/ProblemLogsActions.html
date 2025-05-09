@@ -1,66 +1,3 @@
-<<<<<<< HEAD
-{% extends "base.html" %}
-{% load static %}
-{% block include %}
-<link href="{% static "css/logs.css" %}" rel="stylesheet">
-<link href="{% static "css/forms.css" %}" rel="stylesheet">
-{% endblock %}
-{% block content %}
-<div id="mainContent">
-    <form action="/export-pdf/problem_reps" method="get">
-        {{ search_form.as_p }}
-        {% csrf_token %}
-        <input id="apply" type="submit" value="دانلود PDF">
-    </form>
-    <table>
-        <tr>
-            <th>اعلام کننده</th>
-            <th>نوع خطا</th>
-            <th>اقدامات اصلاحی</th>
-            <th>اقدامات پیشگیری</th>
-            <th>توضیحات</th>
-            <th>تاریخ</th>
-            <th>موثر بوده/نبوده</th>
-            <th>عملیات</th>
-        </tr>
-        {% include "ProblemLogsActionsAJAX.html" %}
-    </table>
-
-    <div class="popUpSection">
-        <div class="popUp">
-            <span class="popUpTitle">سرویس انتخابی با موفقیت از لیست انتظار حذف شد.</span>
-            <a href="/waiting" id="closeBtn" class="submit">بروزرسانی لیست</a>
-        </div>
-    </div>
-</div>
-<span id="loading" class="custom-loader"></span>
-{{ search_form.media }}
-{% endblock %}
-
-{% block domready %}
-<script>
-    let page = 1;
-    let empty_page = false;
-    let block_request = false;
-
-    $(window).scroll(function() {
-        var margin = $(document).height() - $(window).height() - 50;
-        if  ($(window).scrollTop() > margin && empty_page == false && block_request == false) {
-            block_request = true;
-            page += 1;
-            $.get('?page=' + page, function(data) {
-                if(data == '') {
-                    empty_page = true;
-                }
-                else {
-                    block_request = false;
-                    $(" table ").append(data);
-                }
-            });
-        }
-    });
-</script>
-=======
 {% extends "base.html" %}
 {% load static %}
 {% block include %}
@@ -3139,5 +3076,4 @@ loadInitialData();
     });
 </script>
 <script src="{% static "js/search-form.js" %}"></script>
->>>>>>> 3d29c33 (New feature TODOLIST added)
 {% endblock %}
