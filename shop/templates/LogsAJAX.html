@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% load to_jalali_datetime %}
 {% for log in logs %}
 <tr style="background-color: {% if log.status == 'رد شده' or log.status == 'بررسی بیشتر' %}#ff000036{% elif log.status == 'موافقت شده' %}#32c91736{% else %}white{% endif %};">
@@ -12,4 +13,39 @@
 {% empty %}
 </table>
 <span class="message">اطلاعاتی موجود نیست.</span>
+=======
+{% load to_jalali_datetime %}
+{% for log in logs %}
+<tr class="data-row">
+    <td data-column="name" title="{{ log.name }}">{{ log.name }}</td>
+    <td data-column="brand" title="{{ log.brand }}">{{ log.brand }}</td>
+    <td data-column="count" title="{{ log.count }}">{{ log.count }}</td>
+    <td data-column="order_type" title="{{ log.order_type }}">{{ log.order_type }}</td>
+    <td data-column="description" class="description multiline-text" title="{% if log.description %}{{ log.description }}{% else %}بدون توضیحات{% endif %}">{% if log.description %}{{ log.description }}{% else %}بدون توضیحات{% endif %}</td>
+    <td data-column="created_date" title="{{ log.created|to_jalali:'%Y/%m/%d' }}">{{ log.created|to_jalali:'%Y/%m/%d' }}</td>
+    <td data-column="status">
+        {% if log.status == "بررسی نشده" %}
+            <span class="status-container status-pending">{{ log.status }}</span>
+        {% elif log.status == "موافقت شده" %}
+            <span class="status-container status-approved">{{ log.status }}</span>
+        {% elif log.status == "رد شده" %}
+            <span class="status-container status-rejected">{{ log.status }}</span>
+        {% elif log.status == "بررسی بیشتر" %}
+            <span class="status-container status-more-review">{{ log.status }}</span>
+        {% else %}
+            <span class="status-container">{{ log.status }}</span>
+        {% endif %}
+    </td>
+    <td data-column="completed">
+        {% if log.completed == True %}
+            <span class="status-container status-done">انجام شده</span>
+        {% else %}
+            <span class="status-container status-not-done">انجام نشده</span>
+        {% endif %}
+    </td>
+</tr>
+{% empty %}
+</table>
+
+>>>>>>> 3d29c33 (New feature TODOLIST added)
 {% endfor %}

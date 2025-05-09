@@ -1,5 +1,9 @@
 from django import forms
 from .models import ProductBuyOrder, ProductStockroomOrder, Note
+<<<<<<< HEAD
+=======
+from account.models import User
+>>>>>>> 3d29c33 (New feature TODOLIST added)
 from jalali_date_new.fields import JalaliDateField, JalaliDateTimeField
 from jalali_date_new.widgets import AdminJalaliDateWidget, AdminJalaliTimeWidget,\
 									AdminJalaliDateTimeWidget
@@ -140,6 +144,7 @@ class NoteForm(forms.ModelForm):
             })
         }
 
+<<<<<<< HEAD
 
 class SearchForm(forms.Form):
 
@@ -157,3 +162,45 @@ class SearchForm(forms.Form):
         'class': "formTextBox",
         'id': "status",
     }, choices=REQUEST_STATUS), label="وضعیت")
+=======
+# آپدیت فرم جست و جو با پارامتر متقاضی
+class SearchForm(forms.Form):
+    start_date = JalaliDateTimeField(
+        label="تاریخ شروع",
+        widget=AdminJalaliDateWidget
+    )
+    end_date = JalaliDateTimeField(
+        label="تاریخ پایان",
+        widget=AdminJalaliDateWidget
+    )
+
+    status = forms.ChoiceField(
+        choices=REQUEST_STATUS,
+        widget=forms.Select(attrs={
+            'class': "formTextBox",
+            'id': "status"
+        }),
+        label="وضعیت"
+    )
+
+    user = forms.ModelChoiceField(
+        queryset=User.objects.all(),
+        widget=forms.Select(attrs={
+            'class': "formTextBox",
+            'id': "user"
+        }),
+        label="متقاضی",
+        required=False
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['start_date'].widget.attrs.update({
+            'class': 'formTextBox',
+            'placeholder': 'تاریخ شروع'
+        })
+        self.fields['end_date'].widget.attrs.update({
+            'class': 'formTextBox',
+            'placeholder': 'تاریخ پایان'
+        })
+>>>>>>> 3d29c33 (New feature TODOLIST added)

@@ -1,0 +1,15 @@
+{
+    "app": "officeman",
+    "platform": "django",
+    "django": {
+        "modifySettings": false,
+        "collectStatic": true,
+        "timezone": "Asia/Tehran"
+    },
+    "disks": [
+        {
+            "name": "media",
+            "mountTo": "media"
+        }
+    ]
+}
