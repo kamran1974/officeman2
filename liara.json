@@ -1,5 +1,5 @@
 {
-    "app": "officeman",
+    "app": "test-officeman",
     "platform": "django",
     "django": {
         "modifySettings": false,

@@ -689,17 +689,11 @@
                             {{ field }}
                         </div>
                     {% elif field.name == 'is_done' %}
-                        <div class="form-group">
-                            <label>وضعیت انجام</label>
-                            <div class="radio-group">
-                                <div class="radio-item radio-done">
-                                    <input type="radio" id="id_is_done_1" name="is_done" value="True" {% if field.value %}checked{% endif %}>
-                                    <label for="id_is_done_1">انجام شده</label>
-                                </div>
-                                <div class="radio-item radio-not-done">
-                                    <input type="radio" id="id_is_done_0" name="is_done" value="False" {% if not field.value %}checked{% endif %}>
-                                    <label for="id_is_done_0">انجام نشده</label>
-                                </div>
+                        <div class="form-group checkbox-group">
+                            <label for="{{ form.is_done.id_for_label }}" style="margin-left: 5px;">{{ form.is_done.label }}</label>
+                            <div class="custom-checkbox">
+                                {{ form.is_done }}
+                                <span class="checkbox-icon"></span>
                             </div>
                         </div>
                     {% else %}
