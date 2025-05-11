@@ -2,6 +2,7 @@
     "app": "test-officeman",
     "platform": "django",
     "django": {
+        "pythonVersion": "3.12",
         "modifySettings": false,
         "collectStatic": true,
         "timezone": "Asia/Tehran"
