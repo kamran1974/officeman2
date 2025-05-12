@@ -116,7 +116,7 @@
             {% with permissions=request.user.get_all_permissions %}
             
             <!-- منوی اتوماسیون با زیرمنوها - آکاردئون -->
-            {% if "shop.view_productbuyorder" in permissions or "shop.view_productstockroomorder" in permissions or "organization.view_vacationrequest" in permissions or "organization.view_problemreport" in permissions or "organization.view_todolist" in permissions %}
+            {% if "shop.view_productbuyorder" in permissions or "shop.view_productstockroomorder" in permissions or "organization.view_vacationrequest" in permissions or "organization.view_problemreport" in permissions or "organization.view_todolist" in permissions or "organization.add_taskassignment" in permissions %}
             <div class="menu-accordion">
                 <div class="accordion-header">
                     <div class="menuCat">
