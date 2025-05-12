@@ -3,7 +3,6 @@
 {% block include %}
 <link rel="stylesheet" href="https://unpkg.com/persian-datepicker@latest/dist/css/persian-datepicker.min.css">
 <style>
-    /* استایل‌های اختصاصی صفحه سوابق مرخصی - نسخه مینیمال */
     :root {
         /* ترکیب رنگی سایت */
         --site-primary: var(--primary-color); /* رنگ اصلی سایت (سبز) */
@@ -557,12 +556,57 @@
     
     /* پیام "نتیجه‌ای یافت نشد" */
     .no-results-message td {
-        padding: 30px !important;
+        padding: 40px 20px !important;
+        text-align: center;
     }
     
-    .no-results-message i {
+    .empty-message {
+        text-align: center;
+        padding: 40px 20px;
+        color: var(--app-text-light);
+        font-size: 14px;
+        background: linear-gradient(to bottom, #ffffff, #f9f9f9);
+        border-radius: 12px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 15px;
+        width: 100%;
+    }
+    
+    .empty-message i {
+        font-size: 40px;
+        color: #e0e0e6;
+        opacity: 0.8;
         margin-bottom: 10px;
-        opacity: 0.7;
+    }
+    
+    /* استایل برای جدول خالی */
+    .table-container:empty::after,
+    .table-container:has(tbody:empty)::after {
+        content: "اطلاعاتی موجود نیست";
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 50px 0;
+        color: var(--app-text-light);
+        font-size: 16px;
+        text-align: center;
+        width: 100%;
+    }
+    
+    /* نمایش مناسب پیام خالی بودن در حالت موبایل */
+    .empty-card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 200px;
+        width: 100%;
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        margin: 20px 0;
     }
     
     /* حالت ریسپانسیو برای نوار فیلتر */
@@ -874,52 +918,54 @@
         /* box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1); */
     }
     
-    /* بررسی نشده - نارنجی */
-    .status-container.pending,
-    .status-pending {
+    /* استایل‌های برچسب وضعیت (status-badge) - برای همسان‌سازی با TaskActions.html */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        min-width: 80px;
+        max-width: 120px; /* حداکثر عرض */
+        text-align: center;
+    }
+    
+    .status-badge.status-pending, .badge-pending {
         background-color: #fff4dd;
         color: #ff9a00;
         border: 1px solid rgba(255, 154, 0, 0.2);
     }
     
-    /* موافقت شده - سبز */
-    .status-container.approved,
-    .status-approved {
+    .status-badge.status-approved, .badge-approved {
         background-color: rgba(0, 180, 90, 0.1);
         color: #00b45a;
         border: 1px solid rgba(0, 180, 90, 0.2);
     }
     
-    /* انجام شده - سبز تیره */
-    .status-container.done,
-    .status-done {
-        background-color: rgba(0, 126, 70, 0.15);
-        color: var(--site-primary-dark);
-        border: 1px solid rgba(0, 126, 70, 0.25);
+    .status-badge.status-rejected, .badge-rejected {
+        background-color: #ffe3e5;
+        color: var(--app-red);
+        border: 1px solid rgba(239, 57, 78, 0.2);
     }
     
-    /* انجام نشده - خاکستری */
-    .status-container.not-done,
-    .status-not-done {
-        background-color: #f0f0f1;
-        color: #767790;
-        border: 1px solid rgba(118, 119, 144, 0.2);
-    }
-    
-    /* بررسی بیشتر - آبی */
-    .status-container.more-review,
-    .status-more-review {
+    .status-badge.status-more-review {
         background-color: rgba(25, 118, 210, 0.1);
         color: #1976d2;
         border: 1px solid rgba(25, 118, 210, 0.2);
     }
     
-    /* رد شده - قرمز */
-    .status-container.rejected,
-    .status-rejected {
-        background-color: #ffe3e5;
-        color: var(--app-red);
-        border: 1px solid rgba(239, 57, 78, 0.2);
+    .status-badge.status-done, .badge-done {
+        background-color: rgba(0, 126, 70, 0.1);
+        color: var(--site-primary);
+        border: 1px solid rgba(0, 126, 70, 0.2);
+    }
+    
+    .status-badge.status-not-done, .badge-not-done {
+        background-color: #f0f0f1;
+        color: #767790;
+        border: 1px solid rgba(118, 119, 144, 0.2);
     }
     
     .action-btn {
@@ -1128,8 +1174,8 @@
         top: 0;
         height: 100%;
         width: 4px;
-        background-color: var(--site-primary);
-        opacity: 0.6;
+        background-color: #f0f0f1; /* رنگ پیش‌فرض */
+        opacity: 1;
     }
     
     .data-card:active {
@@ -1273,6 +1319,59 @@
         font-size: 12px;
     }
 
+    /* استایل دکمه action-btn در کارت‌ها */
+    .card-footer .action-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--site-primary);
+        color: white;
+        box-shadow: 0 3px 8px rgba(0, 126, 70, 0.2);
+    }
+
+    .card-footer .action-btn:hover,
+    .card-footer .action-btn:active {
+        background-color: var(--site-primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 12px rgba(0, 126, 70, 0.25);
+    }
+
+    .card-footer .action-btn i {
+        font-size: 16px;
+    }
+
+    /* استایل دکمه مشاهده مشابه با کارت نمونه */
+    .view-btn {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 6px 16px !important;
+        background-color: #00a86b !important;
+        color: white !important;
+        border-radius: 50px !important;
+        font-size: 12px !important;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0, 126, 70, 0.25) !important;
+        width: auto !important;
+        height: auto !important;
+    }
+
+    .view-btn i {
+        font-size: 14px !important;
+    }
+
+    .view-btn:hover, 
+    .view-btn:active {
+        background-color: #008c5a !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 126, 70, 0.35) !important;
+    }
+
     /* استایل‌های مختلف کارت بر اساس وضعیت */
     .data-card.status-pending::before {
         background-color: #ff9a00;
@@ -1291,11 +1390,11 @@
     }
     
     .data-card.status-done::before {
-        background-color: var(--site-primary-dark);
+        background-color: #00b45a; /* سبز برای انجام شده */
     }
     
     .data-card.status-not-done::before {
-        background-color: #767790;
+        background-color: var(--app-red); /* قرمز برای انجام نشده */
     }
 
     /* متن‌های طولانی در جدول */
@@ -1823,6 +1922,113 @@
     .card-value.assignees-container .assignee-tag {
         margin-right: 0;
     }
+    
+    /* استایل‌های status-container که حذف شده‌اند */
+    /* بررسی نشده - نارنجی */
+    .status-container.pending,
+    .status-pending {
+        background-color: #fff4dd;
+        color: #ff9a00;
+        border: 1px solid rgba(255, 154, 0, 0.2);
+    }
+    
+    /* موافقت شده - سبز */
+    .status-container.approved,
+    .status-approved {
+        background-color: rgba(0, 180, 90, 0.1);
+        color: #00b45a;
+        border: 1px solid rgba(0, 180, 90, 0.2);
+    }
+    
+    /* انجام شده - سبز تیره */
+    .status-container.done,
+    .status-done {
+        background-color: rgba(0, 126, 70, 0.15);
+        color: var(--site-primary-dark);
+        border: 1px solid rgba(0, 126, 70, 0.25);
+    }
+    
+    /* انجام نشده - خاکستری */
+    .status-container.not-done,
+    .status-not-done {
+        background-color: #f0f0f1;
+        color: #767790;
+        border: 1px solid rgba(118, 119, 144, 0.2);
+    }
+    
+    /* بررسی بیشتر - آبی */
+    .status-container.more-review,
+    .status-more-review {
+        background-color: rgba(25, 118, 210, 0.1);
+        color: #1976d2;
+        border: 1px solid rgba(25, 118, 210, 0.2);
+    }
+    
+    /* رد شده - قرمز */
+    .status-container.rejected,
+    .status-rejected {
+        background-color: #ffe3e5;
+        color: var(--app-red);
+        border: 1px solid rgba(239, 57, 78, 0.2);
+    }
+
+    /* در حالت دسکتاپ عرض ستون‌های وضعیت و انجام شده باید کمتر باشد */
+    @media (min-width: 769px) {
+        .app-table th[data-column="status"],
+        .app-table th[data-column="is_done"] {
+            width: 120px; /* عرض ثابت برای ستون‌های وضعیت و انجام شده */
+        }
+        
+        .app-table td[data-column="status"],
+        .app-table td[data-column="is_done"] {
+            max-width: 120px;
+        }
+    }
+
+    /* استایل برای نمایش وضعیت و انجام شد کنار هم */
+    .card-status-bar {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 10px;
+        margin-top: 10px;
+        padding: 8px 15px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+    }
+
+    /* تنظیم رنگ حاشیه کناری کارت - کارت سفید با نوار رنگی کنار */
+    .data-card {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+        padding: 10px;
+        margin-bottom: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .data-card::before {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background-color: #f0f0f1; /* رنگ پیش‌فرض */
+        opacity: 1;
+    }
+
+    /* رنگ حاشیه بر اساس انجام شده یا نشده */
+    .data-card.is-done::before {
+        background-color: #00b45a; /* سبز برای انجام شده */
+    }
+
+    .data-card.is-not-done::before {
+        background-color: var(--app-red); /* قرمز برای انجام نشده */
+    }
 </style>
 {% endblock %}
 
@@ -1840,13 +2046,52 @@
                 <div class="filter-options">
                 <select class="filter-select" id="filterColumn">
                     <option value="all">همه ستون‌ها</option>
+                    {% if request.path == "/organization/privileged-task-logs" or request.path == "/privileged-task-logs" %}
                     <option value="created_by">ایجاد کننده</option>
+                    {% endif %}
                     <option value="title">عنوان تسک</option>
                     <option value="description">توضیحات</option>
                     <option value="created_at">تاریخ ایجاد</option>
                     <option value="assigned_to">انجام دهندگان</option>
+                    {% if request.path != "/organization/privileged-task-logs" and request.path != "/privileged-task-logs" %}
+                    <option value="status">وضعیت</option>
+                    <option value="is_done">انجام شده</option>
+                    {% endif %}
                 </select>
-                    <!-- حذف بخش filter-chips -->
+                {% if request.path != "/organization/privileged-task-logs" and request.path != "/privileged-task-logs" %}
+                <div class="filter-chips-wrapper">
+                    <div class="filter-chips">
+                        <button class="filter-chip status-all active" data-status="all">
+                            <i class="fa-solid fa-list"></i>
+                            همه
+                        </button>
+                        <button class="filter-chip status-pending" data-status="بررسی نشده">
+                            <i class="fa-solid fa-clock"></i>
+                            بررسی نشده
+                        </button>
+                        <button class="filter-chip status-approved" data-status="تایید شده">
+                            <i class="fa-solid fa-check"></i>
+                            تایید شده
+                        </button>
+                        <button class="filter-chip status-rejected" data-status="رد شده">
+                            <i class="fa-solid fa-xmark"></i>
+                            رد شده
+                        </button>
+                        <button class="filter-chip status-more-review" data-status="بررسی بیشتر">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            بررسی بیشتر
+                        </button>
+                        <button class="filter-chip status-done" data-status="انجام شده">
+                            <i class="fa-solid fa-check-double"></i>
+                            انجام شده
+                        </button>
+                        <button class="filter-chip status-not-done" data-status="انجام نشده">
+                            <i class="fa-solid fa-hourglass-half"></i>
+                            انجام نشده
+                        </button>
+                    </div>
+                </div>
+                {% endif %}
                 </div>
             </div>
             
@@ -1869,12 +2114,23 @@
                 <table class="app-table" id="dataTable">
             <thead>
                 <tr>
-                    <th data-column="created_by">ایجاد کننده</th>
-                    <th data-column="title">عنوان تسک</th>
-                    <th data-column="description">توضیحات</th>
-                    <th data-column="created_at">تاریخ ایجاد</th>
-                    <th data-column="assigned_to">انجام دهندگان</th>
-                    <th data-column="action">عملیات</th>
+                    {% if request.path == "/organization/privileged-task-logs" or request.path == "/privileged-task-logs" %}
+                        <!-- سوابق تسک‌ها: نمایش همه ستون‌ها -->
+                        <th data-column="created_by">ایجاد کننده</th>
+                        <th data-column="title">عنوان تسک</th>
+                        <th data-column="description">توضیحات</th>
+                        <th data-column="created_at">تاریخ ایجاد</th>
+                        <th data-column="assigned_to">انجام دهندگان</th>
+                        <th data-column="action">عملیات</th>
+                    {% else %}
+                        <!-- تسک‌های ایجاد شده: حذف ستون‌های ایجاد کننده و عملیات -->
+                        <th data-column="title">عنوان تسک</th>
+                        <th data-column="description">توضیحات</th>
+                        <th data-column="created_at">تاریخ ایجاد</th>
+                        <th data-column="assigned_to">انجام دهندگان</th>
+                        <th data-column="status">وضعیت</th>
+                        <th data-column="is_done">انجام شده</th>
+                    {% endif %}
                 </tr>
             </thead>
                     <tbody id="tableContent">
@@ -2012,6 +2268,15 @@
         const filterColumn = document.getElementById('filterColumn');
         const filterChips = document.querySelectorAll('.filter-chip');
         let activeFilterStatus = 'all';
+        
+        // تشخیص نوع صفحه
+        const isPrivilegedView = window.location.pathname.includes("privileged-task-logs");
+        
+        // اگر در صفحه "تسک‌های ایجاد شده" هستیم و کاربر گزینه "ایجاد کننده" را انتخاب کرده، به "همه ستون‌ها" تغییر دهیم
+        if (!isPrivilegedView && filterColumn.value === 'created_by') {
+            filterColumn.value = 'all';
+        }
+
         // کد برای بارگذاری موارد بیشتر
 const loading = document.getElementById('loading');
 
@@ -2077,7 +2342,7 @@ function loadMoreData() {
         
         // بررسی پاسخ دریافتی
         if (!html || html.trim() === '' || html.includes('اطلاعاتی موجود نیست')) {
-            console.log('🛑 انتهای لیست - داده دیگری وجود ندارد');
+            console.log(' انتهای لیست - داده دیگری وجود ندارد');
                     empty_page = true;
             removeShowMoreButton();
             showEndOfListMessage();
@@ -2338,60 +2603,62 @@ loadInitialData = function() {
         if (loading) loading.style.display = 'none';
         
         if (data === '' || data.trim() === '' || data.includes('اطلاعاتی موجود نیست')) {
-            tableContent.innerHTML = `<tr><td colspan="10">
-                <div class="empty-message">
-                    <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                        <i class="fa-solid fa-search" style="font-size: 24px; color: var(--app-text-light);"></i>
-                        <div>اطلاعاتی موجود نیست.</div>
-                    </div>
-                </div>
-            </td></tr>`;
-            cardsContainer.innerHTML = '';
-        } else {
-            // حذف اسکلتون‌ها
-            const skeletonRows = tableContent.querySelectorAll('.skeleton-row');
-            skeletonRows.forEach(row => row.remove());
+            // نمایش پیام خالی بودن در جدول
+            const colSpan = window.location.pathname.includes("privileged-task-logs") ? 6 : 6;
+            tableContent.innerHTML = `
+                <tr class="no-results-message">
+                    <td colspan="${colSpan}">
+                        <div class="empty-message">
+                            <i class="fa-solid fa-clipboard-list"></i>
+                            <div>اطلاعاتی موجود نیست</div>
+                        </div>
+                    </td>
+                </tr>`;
             
-            // جایگزینی با داده‌های واقعی در جدول
+            // نمایش پیام خالی بودن در کارت‌ها
+            cardsContainer.innerHTML = `
+                <div class="empty-card">
+                    <div class="empty-message">
+                        <i class="fa-solid fa-clipboard-list"></i>
+                        <div>اطلاعاتی موجود نیست</div>
+                    </div>
+                </div>`;
+        } else {
+            // جایگزینی اسکلتون‌ها با داده‌های واقعی در جدول
             tableContent.innerHTML = data;
             
             // ساخت کارت‌ها برای نمایش موبایل
             renderDataCards();
             
-            // فعال کردن قابلیت نمایش/مخفی‌سازی توضیحات
+            // فعال کردن قابلیت نمایش/مخفی‌سازی توضیحات با کلیک
             setTimeout(() => {
                 setupDescriptionToggle();
             }, 150);
             
             // اعمال کوتاه کردن متن‌های طولانی
             setTimeout(applyTruncateToElements, 100);
-            
-            // بررسی تعداد ردیف‌های داده
-            setTimeout(() => {
-                const rowCount = tableContent.querySelectorAll('tr:not(.skeleton-row):not(.show-more-row):not(.end-of-list-row):not(.retry-row)').length;
-                
-                if (rowCount < 15) {
-                    // اگر تعداد ردیف‌ها کمتر از 15 باشد، به انتهای لیست رسیده‌ایم
-                    empty_page = true;
-                } else {
-                    // اضافه کردن دکمه نمایش بیشتر
-                    addShowMoreButton();
-                }
-            }, 300);
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        if (loading) loading.style.display = 'none';
-        
-        tableContent.innerHTML = `<tr><td colspan="10">
-            <div class="empty-message">
-                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 24px; color: var(--app-red);"></i>
+        const colSpan = window.location.pathname.includes("privileged-task-logs") ? 6 : 6;
+        tableContent.innerHTML = `
+            <tr class="no-results-message">
+                <td colspan="${colSpan}">
+                    <div class="empty-message">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: var(--app-red);"></i>
+                        <div>خطا در بارگذاری اطلاعات. لطفاً صفحه را بارگذاری مجدد کنید.</div>
+                    </div>
+                </td>
+            </tr>`;
+            
+        cardsContainer.innerHTML = `
+            <div class="empty-card">
+                <div class="empty-message">
+                    <i class="fa-solid fa-triangle-exclamation" style="color: var(--app-red);"></i>
                     <div>خطا در بارگذاری اطلاعات. لطفاً صفحه را بارگذاری مجدد کنید.</div>
                 </div>
-            </div>
-        </td></tr>`;
+            </div>`;
     });
 };
 
@@ -2417,11 +2684,23 @@ loadInitialData();
         
         // اعمال کوتاه‌سازی متن به تمام المان‌های متنی
         function applyTruncateToElements() {
-            // اعمال در حالت جدول - ستون انجام دهندگان (5) را حذف کردیم
-            const tableCells = document.querySelectorAll('.app-table tbody td:nth-child(1), .app-table tbody td:nth-child(2), .app-table tbody td:nth-child(3), .app-table tbody td:nth-child(4)');
-            tableCells.forEach(cell => {
-                truncateText(cell, 30);
-            });
+            // بررسی مسیر URL برای تصمیم‌گیری
+            const isPrivilegedView = window.location.pathname.includes("privileged-task-logs");
+            
+            // اعمال در حالت جدول
+            if (isPrivilegedView) {
+                // برای صفحه سوابق تسک ها، همه ستون‌ها را شامل شود
+                const tableCells = document.querySelectorAll('.app-table tbody td:nth-child(1), .app-table tbody td:nth-child(2), .app-table tbody td:nth-child(3), .app-table tbody td:nth-child(4)');
+                tableCells.forEach(cell => {
+                    truncateText(cell, 30);
+                });
+            } else {
+                // برای صفحه تسک‌های ایجاد شده، ستون‌های ایجاد کننده و عملیات حذف شده‌اند
+                const tableCells = document.querySelectorAll('.app-table tbody td:nth-child(1), .app-table tbody td:nth-child(2), .app-table tbody td:nth-child(3)');
+                tableCells.forEach(cell => {
+                    truncateText(cell, 30);
+                });
+            }
             
             // اعمال در حالت کارت
             const cardTitles = document.querySelectorAll('.card-title');
@@ -2460,16 +2739,27 @@ loadInitialData();
             .then(data => {
                 // جایگزینی اسکلتون‌ها با داده‌های واقعی
                 if (data === '' || data.includes('اطلاعاتی موجود نیست')) {
-                    tableContent.innerHTML = `<tr><td colspan="10">
-                        <div class="empty-message">
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                                <i class="fa-solid fa-search" style="font-size: 24px; color: var(--app-text-light);"></i>
-                                <div>اطلاعاتی موجود نیست.</div>
+                    // نمایش پیام خالی بودن در جدول
+                    const colSpan = window.location.pathname.includes("privileged-task-logs") ? 6 : 6;
+                    tableContent.innerHTML = `
+                        <tr class="no-results-message">
+                            <td colspan="${colSpan}">
+                                <div class="empty-message">
+                                    <i class="fa-solid fa-clipboard-list"></i>
+                                    <div>اطلاعاتی موجود نیست</div>
+                                </div>
+                            </td>
+                        </tr>`;
+                    
+                    // نمایش پیام خالی بودن در کارت‌ها
+                    cardsContainer.innerHTML = `
+                        <div class="empty-card">
+                            <div class="empty-message">
+                                <i class="fa-solid fa-clipboard-list"></i>
+                                <div>اطلاعاتی موجود نیست</div>
                             </div>
-                        </div>
-                    </td></tr>`;
-                    cardsContainer.innerHTML = '';
-            } else {
+                        </div>`;
+                } else {
                     // جایگزینی اسکلتون‌ها با داده‌های واقعی در جدول
                     tableContent.innerHTML = data;
                     
@@ -2487,14 +2777,24 @@ loadInitialData();
             })
             .catch(error => {
                 console.error('Error:', error);
-                tableContent.innerHTML = `<tr><td colspan="10">
-                    <div class="empty-message">
-                        <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                            <i class="fa-solid fa-triangle-exclamation" style="font-size: 24px; color: var(--app-red);"></i>
+                const colSpan = window.location.pathname.includes("privileged-task-logs") ? 6 : 6;
+                tableContent.innerHTML = `
+                    <tr class="no-results-message">
+                        <td colspan="${colSpan}">
+                            <div class="empty-message">
+                                <i class="fa-solid fa-triangle-exclamation" style="color: var(--app-red);"></i>
+                                <div>خطا در بارگذاری اطلاعات. لطفاً صفحه را بارگذاری مجدد کنید.</div>
+                            </div>
+                        </td>
+                    </tr>`;
+                
+                cardsContainer.innerHTML = `
+                    <div class="empty-card">
+                        <div class="empty-message">
+                            <i class="fa-solid fa-triangle-exclamation" style="color: var(--app-red);"></i>
                             <div>خطا در بارگذاری اطلاعات. لطفاً صفحه را بارگذاری مجدد کنید.</div>
                         </div>
-                    </div>
-                </td></tr>`;
+                    </div>`;
             });
         }
         
@@ -2516,16 +2816,44 @@ loadInitialData();
         
         // اعمال تابع کوتاه کردن متن به تمام سلول‌های مورد نظر
         function applyTruncateToElements() {
-            // اعمال به سلول‌های جدول - ستون انجام دهندگان (5) را حذف کردیم
-            const tableCells = document.querySelectorAll('.app-table tbody td:nth-child(1), .app-table tbody td:nth-child(2), .app-table tbody td:nth-child(4)');
-            tableCells.forEach(cell => {
-                truncateText(cell, 30);
+            // بررسی مسیر URL برای تصمیم‌گیری
+            const isPrivilegedView = window.location.pathname.includes("privileged-task-logs");
+            
+            // اعمال در حالت جدول
+            if (isPrivilegedView) {
+                // برای صفحه سوابق تسک ها، همه ستون‌ها را شامل شود
+                const tableCells = document.querySelectorAll('.app-table tbody td:nth-child(1), .app-table tbody td:nth-child(2), .app-table tbody td:nth-child(3), .app-table tbody td:nth-child(4)');
+                tableCells.forEach(cell => {
+                    truncateText(cell, 80);
+                });
+            } else {
+                // برای صفحه تسک‌های ایجاد شده، ستون‌های ایجاد کننده و عملیات حذف شده‌اند
+                const tableCells = document.querySelectorAll('.app-table tbody td:nth-child(1), .app-table tbody td:nth-child(2), .app-table tbody td:nth-child(3)');
+                tableCells.forEach(cell => {
+                    truncateText(cell, 80);
+                });
+            }
+            
+            // اعمال در حالت کارت
+            const cardTitles = document.querySelectorAll('.card-title');
+            cardTitles.forEach(title => {
+                truncateText(title, 30);
             });
             
             // اعمال به مقادیر در کارت‌ها - بجز قسمت انجام دهندگان
             const cardValues = document.querySelectorAll('.card-value:not(.assignees-container)');
             cardValues.forEach(value => {
-                truncateText(value, 30);
+                truncateText(value, 20);
+            });
+            
+            const descriptionContents = document.querySelectorAll('.description-content');
+            descriptionContents.forEach(content => {
+                // برای محتوای توضیحات فقط title را تنظیم می‌کنیم بدون کوتاه کردن متن
+                // چون این کار توسط CSS انجام می‌شود
+                const text = content.textContent.trim();
+                if (text.length > 30) {
+                    content.setAttribute('title', text);
+                }
             });
         }
         
@@ -2608,7 +2936,7 @@ loadInitialData();
             }
         }
 
-        // ساخت کارت‌ها برای نمایش موبایل
+        // ساخت کارت‌های داده برای نمایش موبایل
         function renderDataCards() {
             const rows = table.querySelectorAll('tbody tr:not(.no-results-message):not(.skeleton-row)');
             cardsContainer.innerHTML = '';
@@ -2637,57 +2965,88 @@ loadInitialData();
                 const assigneesHTML = assigneesCell ? assigneesCell.innerHTML : '';
                 
                 // استخراج URL عملیات از سلول مربوطه
-                const actionLink = row.querySelector('td[data-column="action"] a.action-btn')?.getAttribute('href') || '/organization/creator_task_review/';
+                const actionCell = row.querySelector('td[data-column="action"] a.action-btn');
+                const actionLink = actionCell ? actionCell.getAttribute('href') : '/organization/creator_task_review/';
                 
-                // تعیین کلاس وضعیت بر اساس کلاس ردیف
-                let statusClass = '';
-                if (row.classList.contains('status-rejected')) {
-                    statusClass = 'status-rejected';
-                } else if (row.classList.contains('status-approved')) {
-                    statusClass = 'status-approved';
+                // دریافت وضعیت و انجام شده برای تعیین کلاس کارت
+                const statusCell = row.querySelector('td[data-column="status"]');
+                const isDoneCell = row.querySelector('td[data-column="is_done"]');
+                
+                // تعیین کلاس کارت بر اساس وضعیت "انجام شده" یا "انجام نشده"
+                let cardStatusClass = '';
+                if (isDoneCell) {
+                    const isDoneText = isDoneCell.textContent.trim();
+                    if (isDoneText.includes('انجام شده')) {
+                        cardStatusClass = 'is-done';
+                    } else if (isDoneText.includes('انجام نشده')) {
+                        cardStatusClass = 'is-not-done';
+                    }
                 }
                 
-                // ایجاد کارت
-                const card = document.createElement('div');
-                card.className = 'data-card ' + statusClass;
+                // بررسی مسیر URL برای تصمیم‌گیری در مورد محتوای کارت
+                const isPrivilegedView = window.location.pathname.includes("privileged-task-logs");
                 
-                card.innerHTML = `
-                    <div class="card-header">
-                        <h3 class="card-title">${title}</h3>
-                        <span class="card-date">${date}</span>
-                    </div>
-                    <div class="card-content">
-                        <div class="card-item">
-                            <span class="card-label">ایجاد کننده:</span>
-                            <span class="card-value">${creator}</span>
+                // ایجاد کارت با ساختار متفاوت بر اساس صفحه
+                let cardHTML = `
+                    <div class="data-card ${cardStatusClass}">
+                        <div class="card-header">
+                            <span class="card-title">${title}</span>
+                            <span class="card-date">${date}</span>
                         </div>
-                        <div class="card-item">
-                            <span class="card-label">انجام دهندگان:</span>
-                            <div class="card-value assignees-container">${assigneesHTML}</div>
-                        </div>
-                    </div>
-                    <div class="card-description" title="برای مشاهده کامل کلیک کنید">
-                        <div class="description-title">توضیحات</div>
-                        <div class="description-content">${description}</div>
-                    </div>
-                    <div class="card-footer">
-                        <a href="${actionLink}" class="card-action">
-                            <i class="fa-solid fa-eye"></i>
-                            مشاهده جزئیات
-                        </a>
+                        <div class="card-content">`;
+                
+                // اضافه کردن بخش ایجادکننده فقط در صفحه سوابق تسک ها
+                if (isPrivilegedView) {
+                    cardHTML += `
+                            <div class="card-item">
+                                <span class="card-label">ایجاد کننده</span>
+                                <span class="card-value">${creator}</span>
+                            </div>`;
+                }
+                
+                cardHTML += `
+                            <div class="card-description">
+                                <div class="description-title">توضیحات</div>
+                                <div class="description-content">${description}</div>
+                            </div>
+                            <div class="card-item">
+                                <span class="card-label">انجام دهندگان</span>
+                                <span class="card-value assignees-container">${assigneesHTML}</span>
+                            </div>`;
+                
+                // اضافه کردن وضعیت و انجام شده برای صفحه تسک‌های ایجاد شده - کنار هم بدون عنوان
+                if (!isPrivilegedView && statusCell && isDoneCell) {
+                    const statusHTML = statusCell.innerHTML;
+                    const isDoneHTML = isDoneCell.innerHTML;
+                    
+                    cardHTML += `
+                            <div class="card-status-bar">
+                                ${statusHTML}
+                                ${isDoneHTML}
+                            </div>`;
+                }
+                
+                cardHTML += `
+                        </div>`;
+                
+                // اضافه کردن دکمه عملیات فقط در صفحه سوابق تسک ها
+                if (isPrivilegedView) {
+                    cardHTML += `
+                        <div class="card-footer">
+                            <div class="card-status"></div>
+                            <a href="${actionLink}" class="action-btn view-btn" title="بررسی تسک">
+                                <i class="fa-solid fa-eye"></i>
+                                مشاهده
+                            </a>
+                        </div>`;
+                }
+                
+                cardHTML += `
                     </div>
                 `;
                 
-                cardsContainer.appendChild(card);
-                
-                // اعمال نمایش/عدم نمایش بر اساس فیلترهای فعلی
-                if (row.style.display === 'none') {
-                    card.style.display = 'none';
-                }
+                cardsContainer.insertAdjacentHTML('beforeend', cardHTML);
             });
-            
-            // اگر هیچ کارتی نمایش داده نشود، پیام خالی را نمایش بده
-            checkEmptyCards();
             
             // فعال کردن قابلیت نمایش/مخفی‌سازی توضیحات با کلیک
             setupDescriptionToggle();
@@ -2756,59 +3115,96 @@ loadInitialData();
         
         // فیلتر جدول بر اساس متن جستجو و ستون انتخاب شده
         function filterTable() {
-            const searchTerm = searchInput.value.trim().toLowerCase();
-            const columnFilter = filterColumn.value;
-            const rows = table.querySelectorAll('tbody tr:not(.skeleton-row)');
-            const cards = cardsContainer.querySelectorAll('.data-card');
+            const query = searchInput.value.trim().toLowerCase();
+            const columnToSearch = filterColumn.value;
+            const isPrivilegedView = window.location.pathname.includes("privileged-task-logs");
+            const isCardMode = document.querySelector('.logs-card').classList.contains('card-mode');
+            
+            // فیلتر سطرهای جدول
+            const rows = table.querySelectorAll('tbody tr:not(.skeleton-row):not(.show-more-row):not(.no-results-message)');
+            let visibleRows = 0;
+            
+            // ایجاد آرایه‌ای برای نگهداری کارت‌های قابل نمایش
+            const visibleCards = [];
             
             rows.forEach((row, index) => {
-                if (row.classList.contains('no-results-message')) return;
+                let shouldShow = true;
+                let matchesSearch = false;
                 
-                let showRow = false;
-                
-                // بررسی فیلتر متن جستجو
-                if (searchTerm === '') {
-                    // اگر متن جستجو خالی است، همه ردیف‌ها را نمایش بده
-                    showRow = true;
-                } else {
-                    // در غیر این صورت، فقط متن جستجو را اعمال کن
-                    const cells = row.querySelectorAll('td');
-                    cells.forEach(cell => {
-                        if (!showRow) { // فقط اگر هنوز مطابقتی پیدا نشده، بررسی کن
-                            const dataColumn = cell.getAttribute('data-column');
-                            const cellText = cell.textContent.trim().toLowerCase();
-                            
-                            if (columnFilter === 'all' || dataColumn === columnFilter) {
-                                if (cellText.includes(searchTerm)) {
-                                    showRow = true;
-                                }
-                            }
+                // اعمال فیلتر براساس متن جستجو
+                if (query) {
+                    if (columnToSearch === 'all') {
+                        // جستجو در همه ستون‌ها - با توجه به نوع صفحه
+                        if (isPrivilegedView) {
+                            // برای صفحه سوابق تسک ها، همه ستون‌ها را جستجو کن
+                            const cellsToSearch = ['created_by', 'title', 'description', 'created_at', 'assigned_to'];
+                            matchesSearch = cellsToSearch.some(column => {
+                                const cell = row.querySelector(`td[data-column="${column}"]`);
+                                return cell && cell.textContent.trim().toLowerCase().includes(query);
+                            });
+                        } else {
+                            // برای صفحه تسک‌های ایجاد شده، فقط ستون‌های موجود را جستجو کن
+                            const cellsToSearch = ['title', 'description', 'created_at', 'assigned_to', 'status', 'is_done'];
+                            matchesSearch = cellsToSearch.some(column => {
+                                const cell = row.querySelector(`td[data-column="${column}"]`);
+                                return cell && cell.textContent.trim().toLowerCase().includes(query);
+                            });
                         }
-                    });
+                    } else {
+                        // جستجو در ستون انتخاب شده
+                        const cell = row.querySelector(`td[data-column="${columnToSearch}"]`);
+                        matchesSearch = cell && cell.textContent.trim().toLowerCase().includes(query);
+                    }
+                    
+                    shouldShow = matchesSearch;
                 }
                 
-                // اعمال نمایش یا عدم نمایش به ردیف و کارت متناظر
-                row.style.display = showRow ? '' : 'none';
-                if (cards[index]) {
-                    cards[index].style.display = showRow ? '' : 'none';
+                // اعمال فیلتر وضعیت (اگر داریم)
+                if (shouldShow && activeFilterStatus !== 'all') {
+                    const statusCell = row.querySelector('td[data-column="status"]');
+                    const isDoneCell = row.querySelector('td[data-column="is_done"]');
+                    
+                    if (activeFilterStatus === 'بررسی نشده') {
+                        shouldShow = statusCell && statusCell.textContent.trim().includes('بررسی نشده');
+                    } else if (activeFilterStatus === 'تایید شده') {
+                        shouldShow = statusCell && statusCell.textContent.trim().includes('تایید شده');
+                    } else if (activeFilterStatus === 'رد شده') {
+                        shouldShow = statusCell && statusCell.textContent.trim().includes('رد شده');
+                    } else if (activeFilterStatus === 'بررسی بیشتر') {
+                        shouldShow = statusCell && statusCell.textContent.trim().includes('بررسی بیشتر');
+                    } else if (activeFilterStatus === 'انجام شده') {
+                        shouldShow = isDoneCell && isDoneCell.textContent.trim().includes('انجام شده');
+                    } else if (activeFilterStatus === 'انجام نشده') {
+                        shouldShow = isDoneCell && isDoneCell.textContent.trim().includes('انجام نشده');
+                    }
+                }
+                
+                // نمایش یا عدم نمایش سطر
+                row.style.display = shouldShow ? '' : 'none';
+                
+                if (shouldShow) {
+                    visibleRows++;
+                    visibleCards.push(index); // ذخیره شاخص ردیف‌های قابل نمایش
                 }
             });
             
-            // بررسی وجود حداقل یک نتیجه
-            const visibleRows = table.querySelectorAll('tbody tr:not(.skeleton-row):not([style*="display: none"])');
+            // بروزرسانی نمایش کارت‌ها در حالت موبایل
+            filterCards(visibleCards);
+            
+            // بررسی نمایش پیام "نتیجه‌ای یافت نشد" در جدول
             let noResultsRow = table.querySelector('.no-results-message');
             
-            if (visibleRows.length === 0) {
+            if (visibleRows === 0) {
                 if (!noResultsRow) {
                     noResultsRow = document.createElement('tr');
                     noResultsRow.className = 'no-results-message';
+                    // تعداد ستون‌های colspan را بر اساس نوع صفحه تنظیم می‌کنیم
+                    const colSpan = isPrivilegedView ? 6 : 6;
                     noResultsRow.innerHTML = `
-                        <td colspan="8">
+                        <td colspan="${colSpan}">
                             <div class="empty-message">
-                                <div style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
-                                    <i class="fa-solid fa-search" style="font-size: 24px; color: var(--app-text-light);"></i>
-                                    <div>نتیجه‌ای برای جستجوی شما یافت نشد.</div>
-                                </div>
+                                <i class="fa-solid fa-search"></i>
+                                <div>نتیجه‌ای برای جستجوی شما یافت نشد.</div>
                             </div>
                         </td>
                     `;
@@ -2819,9 +3215,132 @@ loadInitialData();
             } else if (noResultsRow) {
                 noResultsRow.style.display = 'none';
             }
+        }
+        
+        // تابع جدید برای فیلتر کردن کارت‌ها بر اساس ردیف‌های مشاهده شده در جدول
+        function filterCards(visibleRowIndices) {
+            // پاک کردن همه کارت‌های موجود
+            cardsContainer.innerHTML = '';
             
-            // بررسی وضعیت کارت‌ها
-            checkEmptyCards();
+            // اگر هیچ ردیفی قابل نمایش نیست، پیام خالی بودن را نمایش بده
+            if (visibleRowIndices.length === 0) {
+                cardsContainer.innerHTML = `
+                    <div class="empty-card">
+                        <div class="empty-message">
+                            <i class="fa-solid fa-search"></i>
+                            <div>نتیجه‌ای برای جستجوی شما یافت نشد.</div>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
+            // دریافت تمام ردیف‌های جدول
+            const rows = table.querySelectorAll('tbody tr:not(.skeleton-row):not(.show-more-row):not(.no-results-message)');
+            
+            // ساخت مجدد کارت‌ها فقط برای ردیف‌های قابل نمایش
+            visibleRowIndices.forEach(index => {
+                if (index < rows.length) {
+                    const row = rows[index];
+                    
+                    // کد ساخت کارت مشابه با تابع renderDataCards
+                    // دریافت اطلاعات از سلول‌های ردیف با استفاده از data-column
+                    const creator = row.querySelector('td[data-column="created_by"]')?.textContent.trim() || '';
+                    const title = row.querySelector('td[data-column="title"]')?.textContent.trim() || '';
+                    const description = row.querySelector('td[data-column="description"]')?.textContent.trim() || '';
+                    const date = row.querySelector('td[data-column="created_at"]')?.textContent.trim() || '';
+                    
+                    // دریافت سلول انجام دهندگان و استفاده از همان HTML
+                    const assigneesCell = row.querySelector('td[data-column="assigned_to"]');
+                    const assigneesHTML = assigneesCell ? assigneesCell.innerHTML : '';
+                    
+                    // استخراج URL عملیات از سلول مربوطه
+                    const actionCell = row.querySelector('td[data-column="action"] a.action-btn');
+                    const actionLink = actionCell ? actionCell.getAttribute('href') : '/organization/creator_task_review/';
+                    
+                    // دریافت وضعیت و انجام شده برای تعیین کلاس کارت
+                    const statusCell = row.querySelector('td[data-column="status"]');
+                    const isDoneCell = row.querySelector('td[data-column="is_done"]');
+                    
+                    // تعیین کلاس کارت بر اساس وضعیت "انجام شده" یا "انجام نشده"
+                    let cardStatusClass = '';
+                    if (isDoneCell) {
+                        const isDoneText = isDoneCell.textContent.trim();
+                        if (isDoneText.includes('انجام شده')) {
+                            cardStatusClass = 'is-done';
+                        } else if (isDoneText.includes('انجام نشده')) {
+                            cardStatusClass = 'is-not-done';
+                        }
+                    }
+                    
+                    // بررسی مسیر URL برای تصمیم‌گیری در مورد محتوای کارت
+                    const isPrivilegedView = window.location.pathname.includes("privileged-task-logs");
+                    
+                    // ایجاد کارت با ساختار متفاوت بر اساس صفحه
+                    let cardHTML = `
+                        <div class="data-card ${cardStatusClass}">
+                            <div class="card-header">
+                                <span class="card-title">${title}</span>
+                                <span class="card-date">${date}</span>
+                            </div>
+                            <div class="card-content">`;
+                    
+                    // اضافه کردن بخش ایجادکننده فقط در صفحه سوابق تسک ها
+                    if (isPrivilegedView) {
+                        cardHTML += `
+                                <div class="card-item">
+                                    <span class="card-label">ایجاد کننده</span>
+                                    <span class="card-value">${creator}</span>
+                                </div>`;
+                    }
+                    
+                    cardHTML += `
+                                <div class="card-description">
+                                    <div class="description-title">توضیحات</div>
+                                    <div class="description-content">${description}</div>
+                                </div>
+                                <div class="card-item">
+                                    <span class="card-label">انجام دهندگان</span>
+                                    <span class="card-value assignees-container">${assigneesHTML}</span>
+                                </div>`;
+                    
+                    // اضافه کردن وضعیت و انجام شده برای صفحه تسک‌های ایجاد شده - کنار هم بدون عنوان
+                    if (!isPrivilegedView && statusCell && isDoneCell) {
+                        const statusHTML = statusCell.innerHTML;
+                        const isDoneHTML = isDoneCell.innerHTML;
+                        
+                        cardHTML += `
+                                <div class="card-status-bar">
+                                    ${statusHTML}
+                                    ${isDoneHTML}
+                                </div>`;
+                    }
+                    
+                    cardHTML += `
+                            </div>`;
+                    
+                    // اضافه کردن دکمه عملیات فقط در صفحه سوابق تسک ها
+                    if (isPrivilegedView) {
+                        cardHTML += `
+                            <div class="card-footer">
+                                <div class="card-status"></div>
+                                <a href="${actionLink}" class="action-btn view-btn" title="بررسی تسک">
+                                    <i class="fa-solid fa-eye"></i>
+                                    مشاهده
+                                </a>
+                            </div>`;
+                    }
+                    
+                    cardHTML += `
+                        </div>
+                    `;
+                    
+                    cardsContainer.insertAdjacentHTML('beforeend', cardHTML);
+                }
+            });
+            
+            // فعال کردن قابلیت نمایش/مخفی‌سازی توضیحات با کلیک
+            setupDescriptionToggle();
         }
         
         // اضافه کردن پیام "نتیجه‌ای یافت نشد" اگر هیچ سطری نمایش داده نشود
@@ -3039,6 +3558,80 @@ loadInitialData();
         function sortTable(column, direction) {
             // این تابع غیرفعال شده است
             return;
+        }
+
+        // اعمال فیلترها در هر حالت
+        function initializeFilters() {
+            // اعمال رویدادها برای جستجو
+            searchInput.addEventListener('input', function() {
+                filterTable();
+            });
+            
+            // اعمال رویدادها برای انتخاب ستون
+            filterColumn.addEventListener('change', function() {
+                filterTable();
+            });
+            
+            // اعمال رویدادها برای چیپ‌های فیلتر وضعیت
+            filterChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    filterChips.forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    activeFilterStatus = this.getAttribute('data-status');
+                    filterTable();
+                });
+            });
+
+            // رویداد کلیک روی دکمه پاک کردن جستجو
+            document.querySelector('.filter-search-icon').addEventListener('click', function() {
+                if (searchInput.value !== '') {
+                    searchInput.value = '';
+                    filterTable();
+                }
+            });
+            
+            // رویداد تغییر حالت نمایش
+            cardViewBtn.addEventListener('click', function() {
+                setViewMode('card');
+                // بروزرسانی کارت‌ها بعد از تغییر حالت
+                if (searchInput.value.trim() !== '' || activeFilterStatus !== 'all') {
+                    setTimeout(filterTable, 100);
+                }
+            });
+            
+            tableViewBtn.addEventListener('click', function() {
+                setViewMode('table');
+                // بروزرسانی جدول بعد از تغییر حالت
+                if (searchInput.value.trim() !== '' || activeFilterStatus !== 'all') {
+                    setTimeout(filterTable, 100);
+                }
+            });
+        }
+
+        // فراخوانی تابع اولیه‌سازی فیلترها
+        initializeFilters();
+
+        // تابع تنظیم حالت نمایش
+        function setViewMode(mode) {
+            if (mode === 'card') {
+                logsCard.classList.remove('table-mode');
+                logsCard.classList.add('card-mode');
+                cardViewBtn.classList.add('active');
+                tableViewBtn.classList.remove('active');
+            } else {
+                logsCard.classList.remove('card-mode');
+                logsCard.classList.add('table-mode');
+                tableViewBtn.classList.add('active');
+                cardViewBtn.classList.remove('active');
+            }
+            
+            // ذخیره ترجیح کاربر
+            localStorage.setItem('viewMode', mode);
+            
+            // بروزرسانی فیلترها در حالت جدید
+            if (searchInput.value.trim() !== '' || activeFilterStatus !== 'all') {
+                setTimeout(filterTable, 100);
+            }
         }
     });
 </script>

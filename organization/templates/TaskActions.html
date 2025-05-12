@@ -1844,6 +1844,7 @@
         font-size: 12px;
         font-weight: 600;
         min-width: 80px;
+        max-width: 120px; /* حداکثر عرض */
         text-align: center;
     }
     
@@ -1892,20 +1893,34 @@
         background-color: rgba(239, 57, 78, 0.05);
     }
     
-    /* استایل برای دکمه عملیات */
+    /* در حالت دسکتاپ عرض ستون‌های وضعیت و انجام شده باید کمتر باشد */
+    @media (min-width: 769px) {
+        .app-table th[data-column="status"],
+        .app-table th[data-column="is_done"] {
+            width: 120px; /* عرض ثابت برای ستون‌های وضعیت و انجام شده */
+        }
+        
+        .app-table td[data-column="status"],
+        .app-table td[data-column="is_done"] {
+            max-width: 120px;
+        }
+    }
+    
+    /* استایل برای دکمه عملیات - تغییر به حالت مربعی با گوشه‌های خمیده */
     .action-btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
         width: 36px;
         height: 36px;
-        border-radius: 50%;
+        border-radius: 8px; /* گوشه‌های خمیده مربعی */
         background-color: var(--site-primary-light);
         color: var(--site-primary);
         transition: all 0.2s ease;
         text-decoration: none;
         border: none;
         cursor: pointer;
+        margin: 0 2px;
     }
     
     .action-btn:hover {
@@ -1947,6 +1962,34 @@
     .text-muted {
         color: var(--app-text-light);
         font-style: italic;
+    }
+
+    /* استایل دکمه مشاهده مشابه با کارت نمونه */
+    .view-btn {
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 6px 16px !important;
+        background-color: #00a86b !important;
+        color: white !important;
+        border-radius: 50px !important;
+        font-size: 12px !important;
+        font-weight: 500;
+        box-shadow: 0 2px 8px rgba(0, 126, 70, 0.25) !important;
+        width: auto !important;
+        height: auto !important;
+    }
+
+    .view-btn i {
+        font-size: 14px !important;
+    }
+
+    .view-btn:hover, 
+    .view-btn:active {
+        background-color: #008c5a !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 126, 70, 0.35) !important;
     }
 </style>
 {% endblock %}
@@ -2747,7 +2790,7 @@ loadInitialData();
                             ${is_done}
                         </div>
                         <div class="card-actions">
-                            ${row.cells[7] ? row.cells[7].innerHTML : ''}
+                            ${convertActionButtonsToViewButton(row.cells[7])}
                         </div>
                     </div>
                 `;
@@ -3121,6 +3164,26 @@ loadInitialData();
         // فراخوانی تابع بهبود date picker
         enhanceDatePickers();
     });
+
+    // قبل از تابع filterTable() این تابع را اضافه کنید
+    // تبدیل دکمه‌های عملیات به دکمه مشاهده در حالت موبایل
+    function convertActionButtonsToViewButton(actionsCell) {
+        if (!actionsCell) return '';
+        
+        // پیدا کردن اولین لینک دیدن/مشاهده
+        const viewLink = actionsCell.querySelector('a[title="بررسی تسک"], a[title*="نمایش"], a[title*="مشاهده"]');
+        
+        if (viewLink) {
+            const href = viewLink.getAttribute('href');
+            return `<a href="${href}" class="action-btn view-btn" title="بررسی تسک">
+                        <i class="fa-solid fa-eye"></i>
+                        مشاهده
+                    </a>`;
+        }
+        
+        // اگر لینک مشاهده پیدا نشد، همان محتوای اصلی را برگردان
+        return actionsCell.innerHTML;
+    }
 </script>
 <script src="{% static "js/search-form.js" %}"></script>
 {% endblock %}
