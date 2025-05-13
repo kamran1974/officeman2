@@ -584,12 +584,12 @@
                 
                 <div class="detail-item">
                     <div class="detail-label">تاریخ ایجاد</div>
-                    <div class="detail-value">{{ instance.task.created_at|to_jalali:'%H:%M - %Y/%m/%d' }}</div>
+                    <div class="detail-value">{{ instance.task.created_at|to_jalali:'%Y/%m/%d - %H:%M' }}</div>
                 </div>
                 
                 <div class="detail-item">
                     <div class="detail-label">موعد انجام</div>
-                    <div class="detail-value">{{ instance.task.remind_at|to_jalali:'%H:%M - %Y/%m/%d' }}</div>
+                    <div class="detail-value">{{ instance.task.remind_at|to_jalali:'%Y/%m/%d - %H:%M' }}</div>
                 </div>
                 
                 <div class="detail-item">
@@ -679,7 +679,7 @@
             
             <h3>بروزرسانی وضعیت تسک</h3>
             
-            <form method="post">
+            <form method="post" id="task-update-form">
                 {% csrf_token %}
                 
                 {% for field in form %}
@@ -710,11 +710,11 @@
                 </div>
                 
                 <div class="form-footer">
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" id="submit-button">
                         <i class="fa-solid fa-check"></i>
                         اعمال تغییرات
                     </button>
-                    <a href="/dashboard" class="btn btn-secondary">
+                    <a href="/open-tasks" class="btn btn-secondary">
                         <i class="fa-solid fa-arrow-right"></i>
                         بازگشت
                     </a>
@@ -741,6 +741,45 @@
             textarea.classList.add('form-control');
             textarea.style.minHeight = '120px';
         });
+        
+        // مدیریت فرم و ریدایرکت به صفحه تسک‌های جاری
+        const taskForm = document.getElementById('task-update-form');
+        const submitButton = document.getElementById('submit-button');
+        
+        if (taskForm) {
+            taskForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // جلوگیری از ارسال عادی فرم
+                
+                // نمایش وضعیت در حال ارسال
+                submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال ذخیره...';
+                submitButton.disabled = true;
+                
+                // ارسال فرم با استفاده از Fetch API
+                fetch(window.location.href, {
+                    method: 'POST',
+                    body: new FormData(taskForm),
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // اگر ارسال موفقیت‌آمیز بود، به صفحه تسک‌های جاری هدایت می‌شویم
+                        window.location.href = '/open-tasks';
+                    } else {
+                        // در صورت خطا، فرم را به صورت عادی ارسال می‌کنیم
+                        taskForm.removeEventListener('submit', arguments.callee);
+                        taskForm.submit();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // در صورت خطا، فرم را به صورت عادی ارسال می‌کنیم
+                    taskForm.removeEventListener('submit', arguments.callee);
+                    taskForm.submit();
+                });
+            });
+        }
     });
 </script>
 {% endblock %}

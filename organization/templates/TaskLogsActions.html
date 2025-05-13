@@ -2637,6 +2637,18 @@ loadInitialData = function() {
             
             // اعمال کوتاه کردن متن‌های طولانی
             setTimeout(applyTruncateToElements, 100);
+            
+            // اضافه کردن دکمه نمایش بیشتر
+            setTimeout(() => {
+                // بررسی تعداد سطرها
+                const rowCount = tableContent.querySelectorAll('tr:not(.show-more-row):not(.no-results-message)').length;
+                if (rowCount >= 15) {  // اگر تعداد سطرها 15 یا بیشتر است، دکمه نمایش بیشتر را نشان بده
+                    addShowMoreButton();
+                    console.log('دکمه نمایش بیشتر اضافه شد');
+                } else {
+                    console.log('تعداد سطرها کمتر از 15 است، دکمه نمایش بیشتر اضافه نمی‌شود');
+                }
+            }, 200);
         }
     })
     .catch(error => {
