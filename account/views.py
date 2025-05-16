@@ -136,15 +136,31 @@ def dashboard(request):
             type_count = problem_reports.filter(type=p_type).count()
             problem_types[p_type] = type_count
     
-    # تعداد تسک‌های انجام نشده برای کاربر (فقط تسک‌های مربوط به همان روز)
+    # تعداد تسک‌های انجام نشده برای کاربر (تا امروز)
     open_tasks_count = 0
+    tasks_today_count = 0
+    tasks_before_today_count = 0
+    
     if (request.user.has_perm("organization.add_todolist") or request.user.has_perm("organization.add_taskassignment")):
-        # تسک‌های اختصاص یافته به کاربر که هنوز انجام نشده‌اند و مربوط به امروز هستند
+        # تسک‌های اختصاص یافته به کاربر که هنوز انجام نشده‌اند
         today = timezone.now().date()
-        open_tasks_count = TaskAssignment.objects.filter(
+        
+        # تمام تسک‌های انجام نشده تا امروز
+        open_tasks = TaskAssignment.objects.filter(
             user=request.user,
             is_done=False,
+            task__remind_at__date__lte=today  # کمتر یا مساوی امروز
+        )
+        open_tasks_count = open_tasks.count()
+        
+        # تسک‌های امروز
+        tasks_today_count = open_tasks.filter(
             task__remind_at__date=today
+        ).count()
+        
+        # تسک‌های روزهای قبل
+        tasks_before_today_count = open_tasks.filter(
+            task__remind_at__date__lt=today  # کمتر از امروز
         ).count()
     
     context = {
@@ -168,7 +184,9 @@ def dashboard(request):
         "problem_reports_count": problem_reports_count,
         "problem_types": problem_types,
         
-        "open_tasks_count": open_tasks_count
+        "open_tasks_count": open_tasks_count,
+        "tasks_today_count": tasks_today_count,
+        "tasks_before_today_count": tasks_before_today_count
     }
     
     return render(request, "dashboard.html", context)
@@ -253,15 +271,31 @@ def dashboard_stats(request):
             type_count = problem_reports.filter(type=p_type).count()
             problem_types[p_type] = type_count
     
-    # تعداد تسک‌های انجام نشده برای کاربر (فقط تسک‌های مربوط به همان روز)
+    # تعداد تسک‌های انجام نشده برای کاربر (تا امروز)
     open_tasks_count = 0
+    tasks_today_count = 0
+    tasks_before_today_count = 0
+    
     if (request.user.has_perm("organization.add_todolist") or request.user.has_perm("organization.add_taskassignment")):
-        # تسک‌های اختصاص یافته به کاربر که هنوز انجام نشده‌اند و مربوط به امروز هستند
+        # تسک‌های اختصاص یافته به کاربر که هنوز انجام نشده‌اند
         today = timezone.now().date()
-        open_tasks_count = TaskAssignment.objects.filter(
+        
+        # تمام تسک‌های انجام نشده تا امروز
+        open_tasks = TaskAssignment.objects.filter(
             user=request.user,
             is_done=False,
+            task__remind_at__date__lte=today  # کمتر یا مساوی امروز
+        )
+        open_tasks_count = open_tasks.count()
+        
+        # تسک‌های امروز
+        tasks_today_count = open_tasks.filter(
             task__remind_at__date=today
+        ).count()
+        
+        # تسک‌های روزهای قبل
+        tasks_before_today_count = open_tasks.filter(
+            task__remind_at__date__lt=today  # کمتر از امروز
         ).count()
     
     data = {
@@ -284,7 +318,9 @@ def dashboard_stats(request):
         "problem_reports_count": problem_reports_count,
         "problem_types": problem_types,
         
-        "open_tasks_count": open_tasks_count
+        "open_tasks_count": open_tasks_count,
+        "tasks_today_count": tasks_today_count,
+        "tasks_before_today_count": tasks_before_today_count
     }
     
     return JsonResponse(data)

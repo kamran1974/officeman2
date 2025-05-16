@@ -440,16 +440,7 @@
         text-align: right;
     }
     
-    /* ریسپانسیو */
-    @media (min-width: 1600px) {
-        .quick-stats {
-            grid-template-columns: repeat(4, 1fr);
-        }
-        
-        .stat-card {
-            height: 120px;
-        }
-    }
+
     
     @media (max-width: 1500px) {
         .quick-stats {
@@ -784,7 +775,17 @@
                 </div>
                 <div class="stat-content">
                     <span class="stat-value" data-stat="open-tasks">{{ open_tasks_count|default:0 }}</span>
-                    <span class="stat-label">تسک‌های انجام‌ نشده امروز</span>
+                    <span class="stat-label">تسک‌های انجام نشده تا امروز</span>
+                    <div class="stat-details">
+                        <div class="stat-detail-item">
+                            <span class="detail-label">امروز:</span>
+                            <span class="detail-value" data-stat="tasks-today">{{ tasks_today_count|default:0 }}</span>
+                        </div>
+                        <div class="stat-detail-item">
+                            <span class="detail-label">روزهای قبل:</span>
+                            <span class="detail-value" data-stat="tasks-before">{{ tasks_before_today_count|default:0 }}</span>
+                        </div>
+                    </div>
                 </div>
             </a>
             {% endif %}
@@ -885,6 +886,8 @@
                 updateStatWithAnimation('problem', data.problem_reports_count);
                 updateStatWithAnimation('alternative', data.alternative_requests_count);
                 updateStatWithAnimation('open-tasks', data.open_tasks_count);
+                updateStatWithAnimation('tasks-today', data.tasks_today_count);
+                updateStatWithAnimation('tasks-before', data.tasks_before_today_count);
                 
                 // بروزرسانی جزئیات آمار مرخصی
                 updateStatWithAnimation('vacation-hourly', data.vacation_hourly_count);
