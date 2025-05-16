@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.db.models import Q
 from django.http import JsonResponse
 from .forms import LoginForm
-from organization.models import VacationRequest, ProblemReport
+from organization.models import VacationRequest, ProblemReport, TaskAssignment
 from shop.models import ProductBuyOrder, ProductStockroomOrder
 
 
@@ -135,6 +135,15 @@ def dashboard(request):
             type_count = problem_reports.filter(type=p_type).count()
             problem_types[p_type] = type_count
     
+    # تعداد تسک‌های انجام نشده برای کاربر
+    open_tasks_count = 0
+    if (request.user.has_perm("organization.add_todolist") or request.user.has_perm("organization.add_taskassignment")):
+        # تسک‌های اختصاص یافته به کاربر که هنوز انجام نشده‌اند
+        open_tasks_count = TaskAssignment.objects.filter(
+            user=request.user,
+            is_done=False
+        ).count()
+    
     context = {
         "title": "داشبورد",
         "vacation_requests_count": vacation_requests_count,
@@ -154,7 +163,9 @@ def dashboard(request):
         "stockroom_urgent_count": stockroom_urgent_count,
         
         "problem_reports_count": problem_reports_count,
-        "problem_types": problem_types
+        "problem_types": problem_types,
+        
+        "open_tasks_count": open_tasks_count
     }
     
     return render(request, "dashboard.html", context)
@@ -239,6 +250,15 @@ def dashboard_stats(request):
             type_count = problem_reports.filter(type=p_type).count()
             problem_types[p_type] = type_count
     
+    # تعداد تسک‌های انجام نشده برای کاربر
+    open_tasks_count = 0
+    if (request.user.has_perm("organization.add_todolist") or request.user.has_perm("organization.add_taskassignment")):
+        # تسک‌های اختصاص یافته به کاربر که هنوز انجام نشده‌اند
+        open_tasks_count = TaskAssignment.objects.filter(
+            user=request.user,
+            is_done=False
+        ).count()
+    
     data = {
         "vacation_requests_count": vacation_requests_count,
         "vacation_hourly_count": vacation_hourly_count,
@@ -257,7 +277,9 @@ def dashboard_stats(request):
         "stockroom_urgent_count": stockroom_urgent_count,
         
         "problem_reports_count": problem_reports_count,
-        "problem_types": problem_types
+        "problem_types": problem_types,
+        
+        "open_tasks_count": open_tasks_count
     }
     
     return JsonResponse(data)

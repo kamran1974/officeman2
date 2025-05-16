@@ -13,7 +13,7 @@
     /* بخش سلام و آمار */
     .dashboard-welcome {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 2fr;
         gap: var(--spacing-lg);
         margin-bottom: var(--spacing-lg);
     }
@@ -27,6 +27,13 @@
         /* استایل برای تعیین ارتفاع مناسب برای کارت درخواست جانشینی در حالت دسکتاپ */
         .stat-card.alternative {
             min-height: 115px;
+        }
+        .stat-card.problem {
+            min-height: 115px;
+        }
+        /* استایل برای نمایش متن در یک سطر در کارت جانشینی */
+        .stat-card.alternative .stat-label {
+            white-space: nowrap;
         }
     }
     
@@ -84,7 +91,7 @@
     /* کارت‌های آمار جمع و جورتر */
     .quick-stats {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: var(--spacing-md);
     }
     
@@ -100,6 +107,9 @@
         position: relative;
         overflow: hidden;
         z-index: 1;
+        height: 110px;
+        text-decoration: none;
+        color: white;
     }
     
     .stat-card::before {
@@ -142,6 +152,11 @@
     
     .stat-card.problem {
         background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        color: white;
+    }
+    
+    .stat-card.tasks {
+        background: linear-gradient(135deg, #4a69bd 0%, #3867d6 100%);
         color: white;
     }
     
@@ -199,6 +214,13 @@
         color: rgba(255, 255, 255, 0.85);
         line-height: 1.2;
         margin-bottom: 2px;
+    }
+    
+    /* در حالت دسکتاپ، متن تمام کارت‌ها در یک سطر نمایش داده شود */
+    @media (min-width: 769px) {
+        .stat-label {
+            white-space: nowrap;
+        }
     }
     
     /* انیمیشن برای اعداد آمار */
@@ -400,9 +422,10 @@
     .stat-card.problem .stat-content {
         display: flex;
         flex-direction: column;
-        justify-content: flex-start;
+        justify-content: center;
         align-items: flex-start;
         text-align: right;
+        /* height: 100%; */
     }
     
     .stat-card.problem .stat-value {
@@ -416,7 +439,21 @@
     }
     
     /* ریسپانسیو */
-    @media (max-width: 1200px) {
+    @media (min-width: 1600px) {
+        .quick-stats {
+            grid-template-columns: repeat(4, 1fr);
+        }
+        
+        .stat-card {
+            height: 120px;
+        }
+    }
+    
+    @media (max-width: 1500px) {
+        .quick-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
         .dashboard-cards {
             grid-template-columns: repeat(3, 1fr);
         }
@@ -429,6 +466,29 @@
         
         .dashboard-cards {
             grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .quick-stats {
+            gap: var(--spacing-sm);
+        }
+        
+        .stat-card {
+            padding: var(--spacing-sm);
+            height: auto;
+            min-height: 100px;
+        }
+        
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+        }
+        
+        .stat-icon i {
+            font-size: 22px;
+        }
+        
+        .stat-label {
+            font-size: 11px;
         }
     }
     
@@ -448,7 +508,8 @@
             width: 100%;
             display: flex;
             align-items: center;
-            height: 100px; /* ارتفاع ثابت برای همه کارت‌ها */
+            height: auto;
+            min-height: 90px;
             padding: var(--spacing-md) var(--spacing-lg);
         }
         
@@ -472,6 +533,7 @@
             width: 100%;
             margin-top: 0;
             text-align: right;
+            white-space: normal;
         }
         
         .stat-details {
@@ -479,7 +541,8 @@
             margin-top: var(--spacing-xs);
             display: flex;
             flex-direction: row;
-            gap: var(--spacing-md);
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
             justify-content: flex-start;
             border-top: 1px solid rgba(255, 255, 255, 0.15);
             padding-top: 6px;
@@ -538,6 +601,71 @@
         .card-description {
             font-size: var(--font-xs);
         }
+        
+        .stat-icon {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .stat-icon i {
+            font-size: 20px;
+        }
+        
+        .stat-value {
+            font-size: var(--font-lg);
+        }
+        
+        .stat-card {
+            min-height: 80px;
+            padding: var(--spacing-sm) var(--spacing-md);
+        }
+    }
+    
+    @media (max-width: 400px) {
+        .stat-icon {
+            width: 36px;
+            height: 36px;
+        }
+        
+        .stat-icon i {
+            font-size: 18px;
+        }
+        
+        .stat-value {
+            font-size: var(--font-md);
+        }
+        
+        .stat-label {
+            font-size: 10px;
+        }
+        
+        .stat-card {
+            min-height: 70px;
+            padding: 8px 12px;
+            gap: 8px;
+        }
+        
+        .dashboard-welcome {
+            gap: var(--spacing-md);
+        }
+        
+        .welcome-card {
+            padding: var(--spacing-md);
+        }
+        
+        .stat-details {
+            margin-top: 4px;
+            padding-top: 3px;
+        }
+        
+        .stat-detail-item {
+            font-size: 10px;
+        }
+        
+        .detail-value {
+            padding: 0 4px;
+            min-width: 16px;
+        }
     }
 </style>
 {% endblock %}
@@ -555,7 +683,7 @@
         <!-- آمار سریع -->
         <div class="quick-stats">
             {% if "organization.view_vacationrequest" in request.user.get_all_permissions %}
-            <div class="stat-card vacation">
+            <a href="/vacation-request-logs" class="stat-card vacation">
                 <div class="stat-icon">
                     <i class="fa-solid fa-umbrella-beach"></i>
                 </div>
@@ -573,11 +701,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
             {% endif %}
             
             {% if "shop.view_productbuyorder" in request.user.get_all_permissions %}
-            <div class="stat-card buy">
+            <a href="/product-buy-orders-logs" class="stat-card buy">
                 <div class="stat-icon">
                     <i class="fa-solid fa-basket-shopping"></i>
                 </div>
@@ -595,11 +723,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
             {% endif %}
             
             {% if "shop.view_productstockroomorder" in request.user.get_all_permissions %}
-            <div class="stat-card stockroom">
+            <a href="/product-from-stockroom-logs" class="stat-card stockroom">
                 <div class="stat-icon">
                     <i class="fa-solid fa-dolly"></i>
                 </div>
@@ -617,11 +745,11 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </a>
             {% endif %}
             
-            {% if "organization.view_problemreport" in request.user.get_all_permissions and not request.user.is_superuser %}
-            <div class="stat-card problem">
+            {% if "organization.view_problemreport" in request.user.get_all_permissions %}
+            <a href="/problem-report-logs" class="stat-card problem">
                 <div class="stat-icon">
                     <i class="fa-solid fa-circle-exclamation"></i>
                 </div>
@@ -629,11 +757,11 @@
                     <span class="stat-value" data-stat="problem">{{ problem_reports_count }}</span>
                     <span class="stat-label">مشکلات گزارش شده</span>
                 </div>
-            </div>
+            </a>
             {% endif %}
             
             {% if "organization.add_vacationrequest" in request.user.get_all_permissions %}
-            <div class="stat-card alternative" style="background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); color: white;">
+            <a href="/alternative-requests" class="stat-card alternative" style="background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%); color: white;">
                 <div class="stat-icon">
                     <i class="fa-solid fa-people-arrows"></i>
                 </div>
@@ -644,7 +772,19 @@
                         <!-- فضای خالی برای حفظ ارتفاع یکسان با سایر کارت‌ها -->
                     </div>
                 </div>
-            </div>
+            </a>
+            {% endif %}
+            
+            {% if "organization.add_todolist" in request.user.get_all_permissions or "organization.add_taskassignment" in request.user.get_all_permissions %}
+            <a href="/open-tasks" class="stat-card tasks">
+                <div class="stat-icon">
+                    <i class="fa-solid fa-tasks"></i>
+                </div>
+                <div class="stat-content">
+                    <span class="stat-value" data-stat="open-tasks">{{ open_tasks_count|default:0 }}</span>
+                    <span class="stat-label">تسک‌های جاری انجام نشده</span>
+                </div>
+            </a>
             {% endif %}
         </div>
     </div>
@@ -742,6 +882,7 @@
                 updateStatWithAnimation('stockroom', data.stockroom_orders_count);
                 updateStatWithAnimation('problem', data.problem_reports_count);
                 updateStatWithAnimation('alternative', data.alternative_requests_count);
+                updateStatWithAnimation('open-tasks', data.open_tasks_count);
                 
                 // بروزرسانی جزئیات آمار مرخصی
                 updateStatWithAnimation('vacation-hourly', data.vacation_hourly_count);
