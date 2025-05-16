@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from .forms import LoginForm
 from organization.models import VacationRequest, ProblemReport, TaskAssignment
 from shop.models import ProductBuyOrder, ProductStockroomOrder
+from django.utils import timezone
 
 
 def user_login(request):
@@ -135,13 +136,15 @@ def dashboard(request):
             type_count = problem_reports.filter(type=p_type).count()
             problem_types[p_type] = type_count
     
-    # تعداد تسک‌های انجام نشده برای کاربر
+    # تعداد تسک‌های انجام نشده برای کاربر (فقط تسک‌های مربوط به همان روز)
     open_tasks_count = 0
     if (request.user.has_perm("organization.add_todolist") or request.user.has_perm("organization.add_taskassignment")):
-        # تسک‌های اختصاص یافته به کاربر که هنوز انجام نشده‌اند
+        # تسک‌های اختصاص یافته به کاربر که هنوز انجام نشده‌اند و مربوط به امروز هستند
+        today = timezone.now().date()
         open_tasks_count = TaskAssignment.objects.filter(
             user=request.user,
-            is_done=False
+            is_done=False,
+            task__remind_at__date=today
         ).count()
     
     context = {
@@ -250,13 +253,15 @@ def dashboard_stats(request):
             type_count = problem_reports.filter(type=p_type).count()
             problem_types[p_type] = type_count
     
-    # تعداد تسک‌های انجام نشده برای کاربر
+    # تعداد تسک‌های انجام نشده برای کاربر (فقط تسک‌های مربوط به همان روز)
     open_tasks_count = 0
     if (request.user.has_perm("organization.add_todolist") or request.user.has_perm("organization.add_taskassignment")):
-        # تسک‌های اختصاص یافته به کاربر که هنوز انجام نشده‌اند
+        # تسک‌های اختصاص یافته به کاربر که هنوز انجام نشده‌اند و مربوط به امروز هستند
+        today = timezone.now().date()
         open_tasks_count = TaskAssignment.objects.filter(
             user=request.user,
-            is_done=False
+            is_done=False,
+            task__remind_at__date=today
         ).count()
     
     data = {

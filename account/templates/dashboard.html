@@ -24,11 +24,13 @@
             display: none !important;
         }
         
-        /* استایل برای تعیین ارتفاع مناسب برای کارت درخواست جانشینی در حالت دسکتاپ */
         .stat-card.alternative {
             min-height: 115px;
         }
         .stat-card.problem {
+            min-height: 115px;
+        }
+        .stat-card.tasks {
             min-height: 115px;
         }
         /* استایل برای نمایش متن در یک سطر در کارت جانشینی */
@@ -782,7 +784,7 @@
                 </div>
                 <div class="stat-content">
                     <span class="stat-value" data-stat="open-tasks">{{ open_tasks_count|default:0 }}</span>
-                    <span class="stat-label">تسک‌های جاری انجام نشده</span>
+                    <span class="stat-label">تسک‌های انجام‌ نشده امروز</span>
                 </div>
             </a>
             {% endif %}
