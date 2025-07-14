@@ -26,7 +26,7 @@ $(document).ready(function() {
         const columnValue = $filterColumn.val() ? $filterColumn.val() : 'all';
         const statusValue = $('.filter-chip.active').data('status') || 'all';
         
-        console.log('فیلتر با مقادیر:', { جستجو: searchValue, ستون: columnValue, وضعیت: statusValue });
+        //('فیلتر با مقادیر:', { جستجو: searchValue, ستون: columnValue, وضعیت: statusValue });
         
         $tableRows.each(function() {
             let showRow = true;

@@ -27,4 +27,19 @@ urlpatterns = [
     path('task-logs', views.task_list_view, name='task_logs'),
     path('privileged-task-logs', views.privileged_task_list_view, name='privileged_task_logs'),
     path('open-tasks', views.open_task_list_view, name='open_tasks'),
+    
+    # سیستم پیام‌رسانی داخلی
+    path('new-message', views.new_message, name='new_message'),
+    path('sent-messages', views.sent_messages_view, name='sent_messages'),
+    path('received-messages', views.received_messages_view, name='received_messages'),
+    path('all-messages', views.all_messages_view, name='all_messages'),
+    path('message/<int:pk>', views.message_detail, name='message_detail'),
+    
+    # API های پیام‌رسانی برای چت‌باکس
+    path('api/received-messages', views.api_received_messages, name='api_received_messages'),
+    path('api/sent-messages', views.api_sent_messages, name='api_sent_messages'),
+    path('api/message/<int:pk>', views.api_message_detail, name='api_message_detail'),
+    path('api/send-message', views.api_send_message, name='api_send_message'),
+    path('api/mark-message-seen/<int:pk>', views.api_mark_message_seen, name='api_mark_message_seen'),
+    path('api/get-users', views.api_get_users, name='api_get_users'),
 ] 

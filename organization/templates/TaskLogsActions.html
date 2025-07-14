@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 {% block include %}
-<link rel="stylesheet" href="https://unpkg.com/persian-datepicker@latest/dist/css/persian-datepicker.min.css">
+<link rel="stylesheet" href="{% static 'vendor/persian-datepicker/css/persian-datepicker.min.css' %}">
 <style>
     :root {
         /* ترکیب رنگی سایت */
@@ -2256,8 +2256,8 @@
 {% endblock %}
 
 {% block domready %}
-<script src="https://unpkg.com/persian-date@latest/dist/persian-date.min.js"></script>
-<script src="https://unpkg.com/persian-datepicker@latest/dist/js/persian-datepicker.min.js"></script>
+<script src="{% static 'vendor/persian-date/js/persian-date.min.js' %}"></script>
+<script src="{% static 'vendor/persian-datepicker/js/persian-datepicker.min.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // متغیرهای اصلی

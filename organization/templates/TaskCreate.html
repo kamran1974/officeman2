@@ -2,6 +2,7 @@
 {% load static %}
 {% block include %}
 <link href="{% static "css/forms.css" %}" rel="stylesheet">
+
 <style>
     /* استایل‌های اختصاصی فرم ایجاد تسک */
     .request-form-container {
@@ -485,14 +486,77 @@
 {% block domready %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // اسکریپت برای نمایش نام فایل انتخاب شده
-        const fileInput = document.querySelector('input[type="file"]');
+        // اسکریپت بهبود یافته برای نمایش پیش‌نمایش فایل آپلود شده
+        const fileInput = document.querySelector('input[type="file"][name="guide_file"]');
         const fileNameDisplay = document.getElementById('selected-file');
         
-        if (fileInput) {
+        if (fileInput && fileNameDisplay) {
             fileInput.addEventListener('change', function() {
                 if (this.files.length > 0) {
-                    fileNameDisplay.textContent = 'فایل انتخاب شده: ' + this.files[0].name;
+                    const file = this.files[0];
+                    // نمایش نام فایل
+                    fileNameDisplay.innerHTML = '';
+                    
+                    // ایجاد محتوای نمایش فایل
+                    const filePreviewContainer = document.createElement('div');
+                    filePreviewContainer.className = 'file-preview-container';
+                    
+                    // اضافه کردن نام فایل
+                    const fileName = document.createElement('div');
+                    fileName.className = 'file-name';
+                    fileName.textContent = 'فایل انتخاب شده: ' + file.name;
+                    filePreviewContainer.appendChild(fileName);
+                    
+                    // نمایش پیش‌نمایش بر اساس نوع فایل
+                    if (file.type.startsWith('image/')) {
+                        // اگر فایل تصویر است
+                        const previewImage = document.createElement('img');
+                        previewImage.className = 'file-preview-image';
+                        previewImage.style.maxWidth = '100%';
+                        previewImage.style.maxHeight = '200px';
+                        previewImage.style.marginTop = '10px';
+                        previewImage.style.borderRadius = '8px';
+                        previewImage.style.border = '1px solid #e4e7ec';
+                        
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            previewImage.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                        
+                        filePreviewContainer.appendChild(previewImage);
+                    } else if (file.type === 'application/pdf') {
+                        // اگر فایل PDF است
+                        const pdfIcon = document.createElement('div');
+                        pdfIcon.innerHTML = '<i class="fa-solid fa-file-pdf" style="color: #e74c3c; font-size: 40px; margin-top: 10px;"></i>';
+                        filePreviewContainer.appendChild(pdfIcon);
+                    } else {
+                        // برای سایر انواع فایل
+                        const fileIcon = document.createElement('div');
+                        fileIcon.innerHTML = '<i class="fa-solid fa-file-lines" style="color: #3498db; font-size: 40px; margin-top: 10px;"></i>';
+                        filePreviewContainer.appendChild(fileIcon);
+                    }
+                    
+                    // اضافه کردن اطلاعات فایل
+                    const fileInfo = document.createElement('div');
+                    fileInfo.className = 'file-info';
+                    fileInfo.style.marginTop = '5px';
+                    fileInfo.style.fontSize = '12px';
+                    fileInfo.style.color = '#666';
+                    
+                    // تبدیل سایز فایل به فرمت خوانا
+                    const sizeInKB = file.size / 1024;
+                    let sizeText;
+                    if (sizeInKB < 1024) {
+                        sizeText = sizeInKB.toFixed(2) + ' KB';
+                    } else {
+                        sizeText = (sizeInKB / 1024).toFixed(2) + ' MB';
+                    }
+                    
+                    fileInfo.textContent = `نوع: ${file.type || 'نامشخص'} | حجم: ${sizeText}`;
+                    filePreviewContainer.appendChild(fileInfo);
+                    
+                    fileNameDisplay.appendChild(filePreviewContainer);
                 } else {
                     fileNameDisplay.textContent = '';
                 }
@@ -500,107 +564,123 @@
         }
 
         // اسکریپت محدودیت کمترین تاریخ دیت پیکر
-        jalaliDatepicker.updateOptions({"minDate": "today"});
+        if (typeof jalaliDatepicker !== 'undefined') {
+            jalaliDatepicker.updateOptions({"minDate": "today"});
+        }
 
-        // اسکریپت بهبود یافته برای انتخاب انجام دهندگان
-        const userSelect = document.querySelector('select[multiple]');
+        // اسکریپت انتخاب انجام دهندگان
+        const selectElement = document.querySelector('select[name="assigned_to"]') || document.querySelector('select[multiple]');
         const selectedUsersContainer = document.getElementById('selected-users');
         const checkboxesContainer = document.getElementById('assignees-checkboxes');
         const toggleButton = document.getElementById('toggle-assignees');
         
-        if (userSelect && selectedUsersContainer && checkboxesContainer) {
-            // تابع برای بروزرسانی نمایش کاربران انتخاب شده
-            function updateSelectedUsers() {
+        if (selectElement && selectedUsersContainer && checkboxesContainer) {
+            // تابع برای نمایش کاربران انتخاب شده
+            function showSelectedUsers() {
                 selectedUsersContainer.innerHTML = '';
                 
-                const selectedOptions = Array.from(userSelect.selectedOptions);
+                const selectedUsers = [];
                 
-                if (selectedOptions.length === 0) {
-                    const emptyMessage = document.createElement('div');
-                    emptyMessage.className = 'select-help';
-                    emptyMessage.textContent = 'هیچ کاربری انتخاب نشده است';
-                    selectedUsersContainer.appendChild(emptyMessage);
+                // بررسی گزینه‌های انتخاب شده
+                for (let i = 0; i < selectElement.options.length; i++) {
+                    const option = selectElement.options[i];
+                    if (option.selected) {
+                        selectedUsers.push({
+                            index: i,
+                            value: option.value,
+                            text: option.textContent
+                        });
+                    }
+                }
+                
+                // اگر کاربری انتخاب نشده باشد
+                if (selectedUsers.length === 0) {
+                    const message = document.createElement('div');
+                    message.className = 'select-help';
+                    message.textContent = 'هیچ کاربری انتخاب نشده است';
+                    selectedUsersContainer.appendChild(message);
                     
                     // بروزرسانی متن دکمه موبایل
                     if (toggleButton) {
                         toggleButton.querySelector('span').textContent = 'انتخاب انجام دهندگان';
                     }
-                    
                     return;
                 }
                 
                 // بروزرسانی متن دکمه موبایل
-                if (toggleButton && selectedOptions.length > 0) {
-                    toggleButton.querySelector('span').textContent = `${selectedOptions.length} کاربر انتخاب شده`;
+                if (toggleButton) {
+                    toggleButton.querySelector('span').textContent = `${selectedUsers.length} کاربر انتخاب شده`;
                 }
                 
-                selectedOptions.forEach(option => {
+                // نمایش کاربران انتخاب شده
+                selectedUsers.forEach(user => {
                     const badge = document.createElement('div');
                     badge.className = 'assignee-badge';
                     
                     const icon = document.createElement('i');
                     icon.className = 'fa-solid fa-user';
                     
-                    const text = document.createTextNode(option.textContent);
+                    const text = document.createTextNode(user.text);
                     
-                    // دکمه حذف
-                    const removeBtn = document.createElement('i');
-                    removeBtn.className = 'fa-solid fa-times badge-remove';
-                    removeBtn.setAttribute('data-value', option.value);
-                    removeBtn.addEventListener('click', function() {
-                        // حذف گزینه از سلکت اصلی
-                        userSelect.querySelector(`option[value="${this.getAttribute('data-value')}"]`).selected = false;
+                    const removeButton = document.createElement('i');
+                    removeButton.className = 'fa-solid fa-times badge-remove';
+                    removeButton.onclick = function() {
+                        // لغو انتخاب کاربر
+                        selectElement.options[user.index].selected = false;
                         
-                        // بروزرسانی چک باکس‌ها
-                        const checkbox = document.querySelector(`.assignee-checkbox input[value="${this.getAttribute('data-value')}"]`);
+                        // بروزرسانی چک‌باکس مربوطه
+                        const checkbox = document.getElementById(`user-checkbox-${user.index}`);
                         if (checkbox) checkbox.checked = false;
                         
                         // بروزرسانی نمایش
-                        updateSelectedUsers();
-                    });
+                        showSelectedUsers();
+                    };
                     
                     badge.appendChild(icon);
                     badge.appendChild(text);
-                    badge.appendChild(removeBtn);
+                    badge.appendChild(removeButton);
                     
                     selectedUsersContainer.appendChild(badge);
                 });
             }
             
-            // ایجاد چک باکس‌ها برای هر گزینه
-            function createCheckboxes() {
+            // ایجاد چک‌باکس‌ها برای انتخاب کاربران
+            function createUserCheckboxes() {
                 checkboxesContainer.innerHTML = '';
                 
-                Array.from(userSelect.options).forEach(option => {
-                    const checkboxWrapper = document.createElement('div');
-                    checkboxWrapper.className = 'assignee-checkbox';
+                for (let i = 0; i < selectElement.options.length; i++) {
+                    const option = selectElement.options[i];
+                    
+                    const wrapper = document.createElement('div');
+                    wrapper.className = 'assignee-checkbox';
                     
                     const checkbox = document.createElement('input');
                     checkbox.type = 'checkbox';
-                    checkbox.value = option.value;
-                    checkbox.id = 'checkbox-' + option.value;
+                    checkbox.id = `user-checkbox-${i}`;
                     checkbox.checked = option.selected;
                     
-                    checkbox.addEventListener('change', function() {
-                        // تغییر وضعیت انتخاب در سلکت اصلی
-                        userSelect.querySelector(`option[value="${this.value}"]`).selected = this.checked;
-                        updateSelectedUsers();
-                    });
+                    checkbox.onchange = function() {
+                        // انتخاب یا لغو انتخاب گزینه متناظر
+                        selectElement.options[i].selected = this.checked;
+                        
+                        // بروزرسانی نمایش
+                        showSelectedUsers();
+                    };
                     
                     const label = document.createElement('label');
-                    label.setAttribute('for', 'checkbox-' + option.value);
+                    label.htmlFor = `user-checkbox-${i}`;
                     label.textContent = option.textContent;
                     
-                    checkboxWrapper.appendChild(checkbox);
-                    checkboxWrapper.appendChild(label);
+                    wrapper.appendChild(checkbox);
+                    wrapper.appendChild(label);
                     
-                    checkboxesContainer.appendChild(checkboxWrapper);
-                });
+                    checkboxesContainer.appendChild(wrapper);
+                }
             }
             
             // تنظیم دکمه باز/بسته کردن لیست در موبایل
             if (toggleButton) {
-                toggleButton.addEventListener('click', function() {
+                toggleButton.onclick = function() {
                     if (checkboxesContainer.style.display === 'none') {
                         checkboxesContainer.style.display = 'flex';
                         this.querySelector('i').className = 'fa-solid fa-chevron-up';
@@ -608,29 +688,48 @@
                         checkboxesContainer.style.display = 'none';
                         this.querySelector('i').className = 'fa-solid fa-chevron-down';
                     }
-                });
+                };
             }
             
-            // اجرای اولیه برای تنظیم وضعیت
-            createCheckboxes();
-            updateSelectedUsers();
+            // شنود تغییرات مستقیم در select
+            selectElement.addEventListener('change', showSelectedUsers);
             
-            // فعال کردن حالت موبایلی در صورت نیاز
-            function checkMobileView() {
+            // راه‌اندازی اولیه
+            createUserCheckboxes();
+            showSelectedUsers();
+            
+            // تنظیم حالت نمایش برای موبایل
+            function setupMobileView() {
                 if (window.innerWidth <= 768) {
-                    // مخفی کردن لیست در موبایل به طور پیش‌فرض
                     checkboxesContainer.style.display = 'none';
                 } else {
                     checkboxesContainer.style.display = 'flex';
                 }
             }
             
-            // بررسی اولیه
-            checkMobileView();
+            // اجرای اولیه تنظیمات موبایل
+            setupMobileView();
             
-            // بررسی مجدد هنگام تغییر سایز صفحه
-            window.addEventListener('resize', checkMobileView);
+            // شنود تغییر اندازه صفحه
+            window.addEventListener('resize', setupMobileView);
         }
     });
 </script>
+
+<style>
+    /* استایل‌های پیش‌نمایش فایل */
+    .file-preview-container {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 8px;
+        background-color: #f5f7fa;
+        text-align: center;
+    }
+    
+    .file-name {
+        font-weight: 500;
+        color: var(--primary-color);
+        margin-bottom: 5px;
+    }
+</style>
 {% endblock %}

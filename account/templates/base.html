@@ -8,15 +8,19 @@
     <meta name="theme-color" content="#007E46">
     <link rel="shortcut icon" href="{% static 'favicon.ico' %}" type="image/x-icon">
     <link href="{% static "css/base.css" %}" rel="stylesheet">
+    <!-- حذف حاشیه آبی هنگام کلیک -->
+    <link href="{% static "css/remove-outline.css" %}" rel="stylesheet">
     <!-- افکت‌های آیکون‌ها -->
     <link href="{% static "css/icons-effects.css" %}" rel="stylesheet">
     <!-- انیمیشن‌ها و افکت‌های حرکتی -->
     <link href="{% static "css/animations.css" %}" rel="stylesheet">
     <!-- Font Awesome (نسخه محلی) -->
     <link rel="stylesheet" href="{% static 'vendor/fontawesome/fontawesome-free-6.5.1-web/css/all.min.css' %}">
+    <!-- تقویم شمسی جلالی -->
+    <link rel="stylesheet" href="{% static 'jalali_date_new/css/jalalidatepicker.min.css' %}">
+    <script src="{% static 'jalali_date_new/js/jalalidatepicker.min.js' %}"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100..900&display=swap');
-        
+      
         /* استایل‌های اختصاصی برای دکمه منو در هدر */
         @media (max-width: 768px) {
             .menuIcon {
@@ -95,7 +99,7 @@
     {% endblock %}
     <title>{{ title }} | سامانه مدیریت اداری</title>
 </head>
-<body>
+<body style="-webkit-tap-highlight-color: transparent;">
     <div id="sideBar">
         <div class="profile-section">
             <div class="pName">{{ request.user.first_name }} {{ request.user.last_name }}</div>
@@ -256,6 +260,8 @@
                 <span id="current-date"></span>
             </div>
             
+            {% include 'partials/telegram_chat_widget.html' %}
+            
             <div class="user-profile-dropdown">
                 <button class="dropdown-toggle">
                     <div class="user-avatar">{{ request.user.first_name|first }}</div>
@@ -286,8 +292,8 @@
         <div class="popUpBg"></div>
     </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/js-cookie@2.2.1/src/js.cookie.min.js"></script>
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <script src="{% static 'vendor/js-cookie/js.cookie.min.js' %}"></script>
     <script>
         const csrftoken = Cookies.get('csrftoken');
         function csrfSafeMethod(method) {
@@ -490,5 +496,18 @@
     </script>
     {% block domready %}
     {% endblock %}
+    
+    <!-- <script>
+        // راه‌اندازی تقویم شمسی برای تمامی صفحات
+        if (typeof jalaliDatepicker !== 'undefined') {
+            jalaliDatepicker.startWatch({
+                separatorChar: "/",
+                minDate: "attr",
+                maxDate: "attr",
+                showTodayBtn: true,
+                autoHide: true
+            });
+        }
+    </script> -->
 </body>
 </html>

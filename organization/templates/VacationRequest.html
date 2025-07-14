@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 {% block include %}
-<link href="{% static "css/forms.css" %}" rel="stylesheet">
+<link href="{% static 'css/forms.css' %}" rel="stylesheet">
+<link href="{% static 'css/jalalidatepicker.min.css' %}" rel="stylesheet">
+<script src="{% static 'js/jalalidatepicker.min.js' %}"></script>
 <style>
     /* استایل‌های اختصاصی فرم درخواست مرخصی */
     .request-form-container {
@@ -279,10 +281,21 @@
         }
     });
     
+    // auto-hide on outside click
+    document.addEventListener('click', function(event) {
+        var dp = document.querySelector('.jdp-container');
+        var input = document.querySelector('input[data-jdp-non-chat]');
+        if (!dp) return;
+        if (dp.contains(event.target) || (input && input.contains(event.target))) return;
+        jalaliDatepicker.hide();
+        var overlay = document.querySelector('.jdp-modal-overlay');
+        if (overlay) overlay.style.display = 'none';
+    });
+    
     // اضافه کردن کلاس‌های استایل به فیلدهای فرم
     $(document).ready(function() {
         $("select, input, textarea").addClass("form-control");
     });
 </script>
-<script src="{% static "js/search-form.js" %}"></script>
+<script src="{% static 'js/search-form.js' %}"></script>
 {% endblock %}

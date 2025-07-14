@@ -457,6 +457,23 @@
         background-color: var(--error-color);
     }
     
+    /* استایل‌های دکمه‌های رادیویی */
+    #is_done_yes:checked {
+        border-color: #00b45a;
+    }
+    
+    #is_done_yes:checked::before {
+        background-color: #00b45a;
+    }
+    
+    #is_done_no:checked {
+        border-color: var(--error-color);
+    }
+    
+    #is_done_no:checked::before {
+        background-color: var(--error-color);
+    }
+    
     /* ریسپانسیو */
     @media (max-width: 768px) {
         .detail-grid {
@@ -682,31 +699,34 @@
             <form method="post" id="task-update-form">
                 {% csrf_token %}
                 
-                {% for field in form %}
-                    {% if field.name == 'status' %}
-                        <div class="form-group">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                        </div>
-                    {% elif field.name == 'is_done' %}
-                        <div class="form-group checkbox-group">
-                            <label for="{{ form.is_done.id_for_label }}" style="margin-left: 5px;">{{ form.is_done.label }}</label>
-                            <div class="custom-checkbox">
-                                {{ form.is_done }}
-                                <span class="checkbox-icon"></span>
-                            </div>
-                        </div>
-                    {% else %}
-                        <div class="form-group">
-                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
-                            {{ field }}
-                        </div>
-                    {% endif %}
-                {% endfor %}
+                <div class="form-group">
+                    <label for="status">وضعیت تسک</label>
+                    <select name="status" id="status" class="form-control">
+                        {% for value, text in form.fields.status.choices %}
+                            <option value="{{ value }}" {% if value == form.initial.status %}selected{% endif %}>{{ text }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
                 
                 <div class="form-group">
-                    <label for="{{ note_form.text.id_for_label }}">یادداشت جدید:</label>
-                    {{ note_form.text }}
+                    <label>وضعیت انجام:</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" name="is_done_status" id="is_done_yes" value="yes" {% if form.initial.is_done %}checked{% endif %}>
+                            <label for="is_done_yes">انجام شده</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" name="is_done_status" id="is_done_no" value="no" {% if not form.initial.is_done %}checked{% endif %}>
+                            <label for="is_done_no">انجام نشده</label>
+                        </div>
+                    </div>
+                    <!-- فیلد پنهان برای ارسال مقدار is_done به سرور -->
+                    <input type="hidden" name="is_done" id="is_done" value="{{ form.initial.is_done|yesno:"true,false" }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="text">یادداشت جدید:</label>
+                    <textarea name="text" id="text" class="form-control" style="min-height: 120px;"></textarea>
                 </div>
                 
                 <div class="form-footer">
@@ -742,42 +762,32 @@
             textarea.style.minHeight = '120px';
         });
         
-        // مدیریت فرم و ریدایرکت به صفحه تسک‌های جاری
-        const taskForm = document.getElementById('task-update-form');
-        const submitButton = document.getElementById('submit-button');
+        // اضافه کردن کلاس‌های استایل به دکمه‌های رادیویی
+        const radioButtons = document.querySelectorAll('input[type="radio"]');
+        radioButtons.forEach(radio => {
+            radio.parentElement.classList.add('radio-styled');
+        });
         
-        if (taskForm) {
-            taskForm.addEventListener('submit', function(e) {
-                e.preventDefault(); // جلوگیری از ارسال عادی فرم
-                
-                // نمایش وضعیت در حال ارسال
-                submitButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال ذخیره...';
-                submitButton.disabled = true;
-                
-                // ارسال فرم با استفاده از Fetch API
-                fetch(window.location.href, {
-                    method: 'POST',
-                    body: new FormData(taskForm),
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                .then(response => {
-                    if (response.ok) {
-                        // اگر ارسال موفقیت‌آمیز بود، به صفحه تسک‌های جاری هدایت می‌شویم
-                        window.location.href = '/open-tasks';
-                    } else {
-                        // در صورت خطا، فرم را به صورت عادی ارسال می‌کنیم
-                        taskForm.removeEventListener('submit', arguments.callee);
-                        taskForm.submit();
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // در صورت خطا، فرم را به صورت عادی ارسال می‌کنیم
-                    taskForm.removeEventListener('submit', arguments.callee);
-                    taskForm.submit();
-                });
+        // تنظیم مقدار فیلد پنهان is_done بر اساس انتخاب رادیو باتن‌ها
+        const isDoneYesRadio = document.getElementById('is_done_yes');
+        const isDoneNoRadio = document.getElementById('is_done_no');
+        const isDoneHiddenField = document.getElementById('is_done');
+        
+        // تنظیم مقدار اولیه
+        if (isDoneYesRadio && isDoneNoRadio && isDoneHiddenField) {
+            isDoneHiddenField.value = isDoneYesRadio.checked ? "true" : "false";
+            
+            // اضافه کردن event listener برای تغییر مقدار
+            isDoneYesRadio.addEventListener('change', function() {
+                if (this.checked) {
+                    isDoneHiddenField.value = "true";
+                }
+            });
+            
+            isDoneNoRadio.addEventListener('change', function() {
+                if (this.checked) {
+                    isDoneHiddenField.value = "false";
+                }
             });
         }
     });

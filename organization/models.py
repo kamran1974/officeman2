@@ -171,3 +171,97 @@ class TaskAssignment(models.Model):
 
     def __str__(self):
         return f"{self.task.title} -> {self.user.username}"
+
+
+"""
+Messaging between users with scheduling option
+
+مدل جدید برای ایجاد و کنترل جداول پایگاه داده قابلیت ارسال پیام و پاسخ پیام بین کاربران
+class Message: پیام اصلی که یک یا چند گیرنده و ممکمن است یک پاسخ به یک پیام دیگر باشد
+class Attachment: ضمیمه پیام شامل تصویر، صوت یا ویدئو
+"""
+class Message(models.Model):
+    sender = models.ForeignKey(settings.AUTH_USER_MODEL,
+                               on_delete=models.CASCADE,
+                               related_name='sent_messages',
+                               verbose_name='فرستنده')
+    recipients = models.ManyToManyField(settings.AUTH_USER_MODEL,
+                                        related_name='received_messages',
+                                        verbose_name='گیرندگان')
+    subject = models.CharField(max_length=255,
+                               blank=False,
+                               verbose_name='موضوع')
+    body = models.TextField(blank=True,
+                            verbose_name='متن')
+    reply_to = models.ForeignKey('self',
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.SET_NULL,
+                                 related_name='replies',
+                                 verbose_name='پاسخ به')
+    scheduled_time = models.DateTimeField(null=True,
+                                          blank=True,
+                                          verbose_name='زمانبندی ارسال')
+    created_at = models.DateTimeField(auto_now_add=True,
+                                      verbose_name='زمان ایجاد')
+    sent = models.BooleanField(default=False,
+                               verbose_name='وضعیت ارسال')
+
+    class Meta:
+        verbose_name = 'پیام'
+        verbose_name_plural = 'پیام ها'
+        permissions = [
+            ("privileged_view_messages", "می تواند تمام پیام های کاربران را ببیند"),
+        ]
+
+    def __str__(self):
+        return self.subject
+
+class Attachment(models.Model):
+    message = models.ForeignKey(Message,
+                                on_delete=models.CASCADE,
+                                related_name='attachments',
+                                verbose_name='پیام مربوطه')
+    file = models.FileField(upload_to='message_attachments/',
+                            blank=True,
+                            verbose_name='فایل')
+    uploaded_at = models.DateTimeField(auto_now_add=True,
+                                       verbose_name='زمان آپلود')
+
+    class Meta:
+        verbose_name = 'ضمیمه پیام'
+        verbose_name_plural = 'ضمیمه های پیام'
+
+    def file_type(self):
+        name = self.file.name.lower()
+        if name.endswith(('.jpg', '.jpeg', '.png', '.gif')):
+            return 'image'
+        elif name.endswith(('.mp3', '.wav', '.ogg')):
+            return 'audio'
+        elif name.endswith(('.mp4', '.mov', '.avi')):
+            return 'video'
+        elif name.endswith(('.pdf', '.PDF', '.docx', '.xlsx')):
+            return 'document'
+        return 'other'
+
+
+class MessageSeen(models.Model):
+    """مدل ذخیره اطلاعات خوانده شدن پیام‌ها توسط کاربران"""
+    message = models.ForeignKey(Message,
+                               on_delete=models.CASCADE,
+                               related_name='seen_by_users',
+                               verbose_name='پیام')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                            on_delete=models.CASCADE,
+                            related_name='seen_messages',
+                            verbose_name='کاربر')
+    seen_at = models.DateTimeField(auto_now_add=True,
+                                 verbose_name='زمان مشاهده')
+
+    class Meta:
+        verbose_name = 'مشاهده پیام'
+        verbose_name_plural = 'مشاهده‌های پیام'
+        unique_together = ('message', 'user')  # هر کاربر فقط یک بار می‌تواند پیام را مشاهده کند
+
+    def __str__(self):
+        return f"{self.user} - {self.message.subject} - {self.seen_at}"

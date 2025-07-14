@@ -2,7 +2,7 @@ from django import forms
 from jalali_date_new.fields import JalaliDateField, JalaliDateTimeField
 from jalali_date_new.widgets import AdminJalaliDateWidget, AdminJalaliTimeWidget,\
 									AdminJalaliDateTimeWidget
-from .models import VacationRequest, ProblemReport, TodoList, TaskAssignment
+from .models import VacationRequest, ProblemReport, TodoList, TaskAssignment, Message, Attachment
 from account.models import User
 
 
@@ -280,8 +280,54 @@ class TaskReviewForm(forms.ModelForm):
                 'id': "status",
             }),
             'is_done': forms.CheckboxInput(attrs={
-                'class': "formTextBox",
-                'id': "is_done",
-                'label': "انجام شده؟"
+                'class': "done-toggle",
+                'id': "is_done"
             })
+        }
+
+
+"""
+Messaging forms
+"""
+
+class MessageForm(forms.ModelForm):
+
+    class Meta:
+        model = Message
+        fields = ('recipients', 'subject', 'body', 'scheduled_time')
+        widgets = {
+            'subject': forms.TextInput(attrs={
+                'class': "formTextBox",
+                'id': "subject",
+                'placeholder': "موضوع",
+            }),
+            'body': forms.Textarea(attrs={
+                'class': "formTextBox",
+                'id': "body",
+                'placeholder': "متن پیام",
+            }),
+            'recipients': forms.SelectMultiple(attrs={
+                'class': "formTextBox",
+                'id': "recipients",
+                'placeholder': "گیرندگان",
+            })
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['scheduled_time'] = JalaliDateTimeField(label="زمانبندی ارسال",
+                                                            widget=AdminJalaliDateTimeWidget)
+        self.fields['scheduled_time'].widget.attrs.update({'class': 'formTextBox',
+                                                           'placeholder': 'تاریخ و زمان ارسال'})
+
+class AttachmentForm(forms.ModelForm):
+
+    class Meta:
+        model = Attachment
+        fields = ('file',)
+        widgets = {
+            'file': forms.FileInput(attrs={
+                'class': "formTextBox",
+                'id': "file",
+            }),
         }

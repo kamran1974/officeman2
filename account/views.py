@@ -163,6 +163,15 @@ def dashboard(request):
             task__remind_at__date__lt=today  # کمتر از امروز
         ).count()
     
+    # Items count received unread messages and pending messages
+    user_unread_messages_count = 0
+    user_pending_messages_count = 0
+    
+    # اگر مدل پیام فعال شده باشد، تعداد پیام‌های خوانده نشده و در انتظار را محاسبه میکنیم
+    if hasattr(request.user, 'received_messages'):
+        user_unread_messages_count = request.user.received_messages.filter(sent=False).count()
+        user_pending_messages_count = request.user.sent_messages.filter(sent=False).count()
+    
     context = {
         "title": "داشبورد",
         "vacation_requests_count": vacation_requests_count,
@@ -186,7 +195,10 @@ def dashboard(request):
         
         "open_tasks_count": open_tasks_count,
         "tasks_today_count": tasks_today_count,
-        "tasks_before_today_count": tasks_before_today_count
+        "tasks_before_today_count": tasks_before_today_count,
+        
+        "user_unread_messages_count": user_unread_messages_count,
+        "user_pending_messages_count": user_pending_messages_count
     }
     
     return render(request, "dashboard.html", context)
